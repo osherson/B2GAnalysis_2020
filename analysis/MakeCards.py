@@ -169,7 +169,7 @@ for Sigs in SIG:
 		for i in range(NFITPAR):
 			text_file.write("P"+str(i)+" shapeN2                -             1.000         -\n")
 		text_file.write("TTA shapeN2                             -                 1.000      1.000      \n")
-		text_file.write("TTN shapeN2                             -                 1.000      1.000      \n")
+		text_file.write("TTNorm shapeN2                             -                 1.000      1.000      \n")
 		for i in range(1,NBINS):
 		    text_file.write("BarBeeBin"+str(i)+" shapeN2                -             1.000         -\n")
 		for sys in SysWeighted:
