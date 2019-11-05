@@ -164,6 +164,8 @@ for Sigs in SIG:
 		text_file.write("rate                                  %f                 %f          %f        \n"%(SIGNAL.Integral(),NONRES.Integral(),TTBAR.Integral()))
 		text_file.write("-------------------------------------------------------------------------------\n")
 		text_file.write("BBSF lnN                      1.15              -          -          \n")
+		text_file.write("lumi lnN                      1.025              -          -          \n")
+		text_file.write("trig lnN                      1.05              -          -       \n")
 		for i in range(NFITPAR):
 			text_file.write("P"+str(i)+" shapeN2                -             1.000         -\n")
 		text_file.write("TTA shapeN2                             -                 1.000      1.000      \n")
@@ -374,6 +376,8 @@ for Sigs in SIG:
 		text_file.write("rate                                  %f                 %f          %f        \n"%(SIGNAL.Integral(),NONRES.Integral(),TTBAR.Integral()))
 		text_file.write("-------------------------------------------------------------------------------\n")
 		text_file.write("BBSF lnN                      1.15              -          -          \n")
+		text_file.write("lumi lnN                      1.025              -          -          \n")
+		text_file.write("trig lnN                      1.05              -          -       \n")
 		for i in range(NFITPAR):
 			text_file.write("P"+str(i)+" shapeN2                -             1.000         -\n")
 		text_file.write("TTA shapeN2                             -                 1.000      1.000      \n")
