@@ -33,10 +33,11 @@ python UseEst2D.py
 echo -e " ${RED}> Making the data card! ${NC}"
 python MakeCards.py
 
+echo -e " ${RED}> Cleaning up! ${NC}"
+python Cleanup.py
+
 echo -e " ${RED}> Cleaning up... ${NC}"
 rm TEMPPAY*
-
-
 
 end=`date +%s`
 echo -e "${RED}                    time = $((end-start)) seconds${NC}"
