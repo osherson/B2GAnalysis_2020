@@ -61,8 +61,10 @@ def Unroll(H):
 	for i in range(0,(nyb)):
 		for j in range(0,(nxb)):
 			k = H.GetBin(i+1,j+1)
-			index = 1 + j + i*nxb
-			oH.Fill(index, H.GetBinContent(k))
+			index = oH.FindBin(1 + j + i*nxb)
+			oH.SetBinContent(index, H.GetBinContent(k))
+			oH.SetBinError(index, H.GetBinError(k))
+
 	return oH
 # -------------------------- #
 
