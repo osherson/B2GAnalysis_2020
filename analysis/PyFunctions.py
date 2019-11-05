@@ -56,7 +56,6 @@ def GoodPlotFormat(H, *args):
 def Unroll(H):
 	nxb = H.GetNbinsX()
 	nyb = H.GetNbinsY()
-	print "("+str(nxb)+","+str(nyb)+") = "+str(nxb*nyb)+" bins"
 	oH = TH1F(H.GetName()+"_1d", ";bin # ; events", nxb*nyb, 0.5, (nxb*nyb)+0.5)
 	oH.SetStats(0)
 	for i in range(0,(nyb)):
