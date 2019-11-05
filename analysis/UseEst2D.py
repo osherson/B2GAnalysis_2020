@@ -138,6 +138,7 @@ for VAR in EstVars2D:
 		for i in range(pull.GetNbinsX()):
 			try: s_pull.SetBinContent(i+1,s_pull.GetBinContent(i+1)/A.GetBinError(i+1))
 			except: s_pull.SetBinContent(i+1,0)
+		plot_sig_pulls.append(s_pull)
 
 
 	C_var_tmp = ROOT.TCanvas()
