@@ -66,7 +66,7 @@ for Sigs in SIG:
 			BB_B_tempD = B.Clone("nonres_BarBeeBin"+str(i)+"Down")
 			ErrStat = B.GetBinContent(i)*(B_stat.GetBinError(i)/B_stat.GetBinContent(i))
 			BB_B_tempU.SetBinContent(i, BB_B_tempU.GetBinContent(i) + ErrStat)
-			BB_B_tempD.SetBinContent(i, min(0.,BB_B_tempD.GetBinContent(i) - ErrStat))
+			BB_B_tempD.SetBinContent(i, max(0.,BB_B_tempD.GetBinContent(i) - ErrStat))
 			NONRES_BB.append(BB_B_tempU)
 			NONRES_BB.append(BB_B_tempD)
 		###########################################################################
@@ -269,7 +269,7 @@ for Sigs in SIG:
 			BB_B_tempD = B.Clone("nonres_BarBeeBin"+str(i)+"Down")
 			ErrStat = B.GetBinContent(i)*(B_stat.GetBinError(i)/B_stat.GetBinContent(i))
 			BB_B_tempU.SetBinContent(i, BB_B_tempU.GetBinContent(i) + ErrStat)
-			BB_B_tempD.SetBinContent(i, min(0.,BB_B_tempD.GetBinContent(i) - ErrStat))
+			BB_B_tempD.SetBinContent(i, max(0.,BB_B_tempD.GetBinContent(i) - ErrStat))
 			NONRES_BB.append(BB_B_tempU)
 			NONRES_BB.append(BB_B_tempD)
 		###########################################################################
