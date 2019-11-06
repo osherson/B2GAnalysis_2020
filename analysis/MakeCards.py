@@ -16,12 +16,9 @@ for Sigs in SIG:
 		NBINS = A.GetNbinsX()+1
 		Att = outF.Get("rA_ttbar_"+VAR[0])
 		B = outF.Get("rB_nom_data_"+VAR[0])
-		B_stat = outF.Get("rB_stat_data_"+VAR[0])
 		Btt = outF.Get("rB_nom_ttbar_"+VAR[0])
-		Btt_stat = outF.Get("rB_stat_ttbar_"+VAR[0])
 
 		B.Add(Btt, -1.)
-		B_stat.Add(Btt_stat, -1.)
 		DATA = A.Clone("data_obs")
 		TTBAR = Att.Clone("ttbar")
 		NONRES = B.Clone("nonres")
@@ -58,18 +55,6 @@ for Sigs in SIG:
 		NONRES_nd = B_nd.Clone("nonres_TTNormDown")
 		###########################################################################
 
-		# now the bin by bin BB uncertainties:
-		###########################################################################
-		NONRES_BB = []
-		for i in range(1,NBINS):
-			BB_B_tempU = B.Clone("nonres_BarBeeBin"+str(i)+"Up")
-			BB_B_tempD = B.Clone("nonres_BarBeeBin"+str(i)+"Down")
-			ErrStat = B.GetBinContent(i)*(B_stat.GetBinError(i)/B_stat.GetBinContent(i))
-			BB_B_tempU.SetBinContent(i, BB_B_tempU.GetBinContent(i) + ErrStat)
-			BB_B_tempD.SetBinContent(i, max(0.,BB_B_tempD.GetBinContent(i) - ErrStat))
-			NONRES_BB.append(BB_B_tempU)
-			NONRES_BB.append(BB_B_tempD)
-		###########################################################################
 
 		# now the uncertainty from each variables in the fit:
 		###########################################################################
@@ -134,7 +119,6 @@ for Sigs in SIG:
 		NONRES_nu.Write()
 		NONRES_nd.Write()
 
-		for h in NONRES_BB: h.Write()
 		for h in FitUncs: h.Write()
 		for h in SignalSysts: h.Write()
 
@@ -170,12 +154,11 @@ for Sigs in SIG:
 			text_file.write("P"+str(i)+" shapeN2                -             1.000         -\n")
 		text_file.write("TTA shapeN2                             -                 1.000      1.000      \n")
 		text_file.write("TTNorm shapeN2                             -                 1.000      1.000      \n")
-		for i in range(1,NBINS):
-		    text_file.write("BarBeeBin"+str(i)+" shapeN2                -             1.000         -\n")
 		for sys in SysWeighted:
 			text_file.write(sys[0]+" shapeN2                      1.000              -          -          \n")
 		for sys in SysComputed:
 			text_file.write(sys[0]+" shapeN2                      1.000              -          -          \n")
+		text_file.write("* autoMCStats 0 0 1\n")
 		text_file.close()
 
 
@@ -207,12 +190,9 @@ for Sigs in SIG:
 		NBINS = uA.GetNbinsX()+1
 		uAtt = outF.Get("rA_ttbar_"+VAR[0]+"_"+VAR[3])
 		uB = outF.Get("rB_nom_data_"+VAR[0]+"_"+VAR[3])
-		uB_stat = outF.Get("rB_stat_data_"+VAR[0]+"_"+VAR[3])
 		uBtt = outF.Get("rB_nom_ttbar_"+VAR[0]+"_"+VAR[3])
-		uBtt_stat = outF.Get("rB_stat_ttbar_"+VAR[0]+"_"+VAR[3])
 
 		uB.Add(uBtt, -1.)
-		uB_stat.Add(uBtt_stat, -1.)
 
 		DATA = A.Clone("data_obs")
 		Att = Unroll(uAtt)
@@ -263,17 +243,6 @@ for Sigs in SIG:
 		NONRES_nd = B_nd.Clone("nonres_TTNormDown")
 		###########################################################################
 
-		# now the bin by bin BB uncertainties:
-		###########################################################################
-		NONRES_BB = []
-		for i in range(1,NBINS):
-			BB_B_tempU = B.Clone("nonres_BarBeeBin"+str(i)+"Up")
-			BB_B_tempD = B.Clone("nonres_BarBeeBin"+str(i)+"Down")
-			ErrStat = B.GetBinContent(i)*(B_stat.GetBinError(i)/B_stat.GetBinContent(i))
-			BB_B_tempU.SetBinContent(i, BB_B_tempU.GetBinContent(i) + ErrStat)
-			BB_B_tempD.SetBinContent(i, max(0.,BB_B_tempD.GetBinContent(i) - ErrStat))
-			NONRES_BB.append(BB_B_tempU)
-			NONRES_BB.append(BB_B_tempD)
 		###########################################################################
 
 		# now the uncertainty from each variables in the fit:
@@ -346,7 +315,6 @@ for Sigs in SIG:
 		NONRES_nu.Write()
 		NONRES_nd.Write()
 
-		for h in NONRES_BB: h.Write()
 		for h in FitUncs: h.Write()
 		for h in SignalSysts: h.Write()
 
@@ -382,12 +350,11 @@ for Sigs in SIG:
 			text_file.write("P"+str(i)+" shapeN2                -             1.000         -\n")
 		text_file.write("TTA shapeN2                             -                 1.000      1.000      \n")
 		text_file.write("TTNorm shapeN2                             -                 1.000      1.000      \n")
-		for i in range(1,NBINS):
-		    text_file.write("BarBeeBin"+str(i)+" shapeN2                -             1.000         -\n")
 		for sys in SysWeighted:
 			text_file.write(sys[0]+" shapeN2                      1.000              -          -          \n")
 		for sys in SysComputed:
 			text_file.write(sys[0]+" shapeN2                      1.000              -          -          \n")
+		text_file.write("* autoMCStats 0 0 1\n")
 		text_file.close()
 
 

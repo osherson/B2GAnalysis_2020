@@ -148,5 +148,5 @@ for VAR in EstVars:
 		pull.Draw("esame")
 	C_var_tmp.Print("../results/"+NAME+"/VAREST_"+NAME+"_"+VAR[0]+".root")
 	C_var_tmp.Print("../results/"+NAME+"/VAREST_"+NAME+"_"+VAR[0]+".png")
-	
+
 outF.Close()
