@@ -16,6 +16,9 @@ python AnalysisSetup.py
 echo -e " ${RED}> Filling regions ABC&D... ${NC}"
 python GetRegions.py
 
+echo -e " ${RED}> Checking correlations... ${NC}"
+python CheckCorr.py
+
 echo -e " ${RED}> Fitting those regions... ${NC}"
 python GetFits.py
 
@@ -35,6 +38,9 @@ python MakeCards.py
 
 echo -e " ${RED}> Cleaning up! ${NC}"
 python Cleanup.py
+
+echo -e " ${RED}> Using combine to run fits! ${NC}"
+python DoCombineSteps.py
 
 echo -e " ${RED}> Cleaning up... ${NC}"
 rm TEMPPAY*
