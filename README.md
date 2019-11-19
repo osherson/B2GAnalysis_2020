@@ -7,4 +7,6 @@ An example payload is provided in the payloads directory. The ONLY thing that sh
 
 Please create a "results" directory (ourside analysis) for the script to write to.
 
+You will also need to install combine.
+
 - Marc
