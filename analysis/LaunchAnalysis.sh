@@ -36,13 +36,12 @@ python UseEst2D.py
 echo -e " ${RED}> Making the data card! ${NC}"
 python MakeCards.py
 
-echo -e " ${RED}> Cleaning up! ${NC}"
-python Cleanup.py
-
 echo -e " ${RED}> Using combine to run fits! ${NC}"
 python DoCombineSteps.py
+python DoCombineSteps2.py
 
 echo -e " ${RED}> Cleaning up... ${NC}"
+python Cleanup.py
 rm TEMPPAY*
 
 end=`date +%s`

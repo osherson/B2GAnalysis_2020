@@ -3,7 +3,7 @@ from ROOT import *
 import numpy
 import math
 import sys
-import numpy
+import array
 
 RDF = ROOT.ROOT.RDataFrame
 
@@ -77,8 +77,8 @@ def GetQuantileProfiles(Th2f, cut):
 		xhi = Th2f.GetXaxis().GetBinUpEdge(Th2f.GetXaxis().GetNbins() );
 		for i in range(nxbins):
 				H = Th2f.ProjectionY("ProjY"+str(i),i+1,i+1)
-				probSum = array('d', [cut])
-				q = array('d', [0.0]*len(probSum))
+				probSum = array.array('d', [cut])
+				q = array.array('d', [0.0]*len(probSum))
 				H.GetQuantiles(len(probSum), q, probSum)
 				q1.append(q[0])
 		H1 = TH1F("Qprof"+str(cut), "", nxbins,xlo,xhi)
@@ -122,6 +122,39 @@ def AddCMSLumi(pad, fb, extra):
 	pad.Update()
 # -------------------------- #
 
+# -------------------------- #
+# Turns a ROOT.TGraphAsym (TG) into a histogram for easier plotting an manipulation. The template can be used to convet to bins in some
+# other value (instead of just point number). Needs a name for root bookkeeping.
+def convertAsymGraph(TG, template, name):
+	Hist = template.Clone(name)
+	for i in range(1,Hist.GetNbinsX()+1):
+		Hist.SetBinContent(i,0.)
+	for i in range(TG.GetN()):
+		Hist.SetBinContent(i+1,TG.GetY()[i]*(TG.GetErrorXlow(i)+TG.GetErrorXhigh(i)))
+	Hist.Sumw2()
+	return Hist
+# -------------------------- #
+
+# -------------------------- #
+# Turns a histogram with n bins into a similar histogram with n bins, but uses the binning values of tempalte. Needs a name for root bookkeeping.
+def convertBinNHist(H, template, name):
+	Hist = template.Clone(name)
+	for i in range(1,Hist.GetNbinsX()+1):
+		Hist.SetBinContent(i,H.GetBinContent(i))
+		Hist.SetBinError(i,H.GetBinError(i))
+	return Hist
+# -------------------------- #
+
+# -------------------------- #
+# Takes a histogram and returns two histograms which are the up and down errors. Needs a name to ensure no root funky business.
+def GetErrHists(H, name):
+	Up = H.Clone(name+"_up")
+	Down = H.Clone(name+"_down")
+	for i in range(1,H.GetNbinsX()+1):
+		Up.SetBinContent(i, H.GetBinContent(i)+H.GetBinError(i))
+		Down.SetBinContent(i, max(0.,H.GetBinContent(i)-H.GetBinError(i)))
+	return Up, Down
+# -------------------------- #
 
 # -------------------------- #
 # A series of nice combinations of lines/colors for plotting multiple lines in situations where I don't know how many I'm going to have:

@@ -147,7 +147,7 @@ for Sigs in SIG:
 		text_file.write("process                               signal             nonres         ttbar     \n")
 		text_file.write("rate                                  %f                 %f          %f        \n"%(SIGNAL.Integral(),NONRES.Integral(),TTBAR.Integral()))
 		text_file.write("-------------------------------------------------------------------------------\n")
-		text_file.write("BBSF lnN                      1.15              -          -          \n")
+		text_file.write("BBSF lnN                      1.225              -          -          \n")
 		text_file.write("lumi lnN                      1.025              -          -          \n")
 		text_file.write("trig lnN                      1.05              -          -       \n")
 		for i in range(NFITPAR):
@@ -343,7 +343,7 @@ for Sigs in SIG:
 		text_file.write("process                               signal             nonres         ttbar     \n")
 		text_file.write("rate                                  %f                 %f          %f        \n"%(SIGNAL.Integral(),NONRES.Integral(),TTBAR.Integral()))
 		text_file.write("-------------------------------------------------------------------------------\n")
-		text_file.write("BBSF lnN                      1.15              -          -          \n")
+		text_file.write("BBSF lnN                      1.20              -          -          \n")
 		text_file.write("lumi lnN                      1.025              -          -          \n")
 		text_file.write("trig lnN                      1.05              -          -       \n")
 		for i in range(NFITPAR):

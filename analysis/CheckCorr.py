@@ -10,29 +10,34 @@ TTBAR = outF.Get("presel_ABCD_ttbar")
 DATASUB = DATA.Clone("presel_ABCD_sub")
 DATASUB.Add(TTBAR, -1.)
 
-CutsD = []
-CutsS = []
-for i in [0.1, 0.25, 0.5, 0.75, 0.9]:
-	CutsD.append(GetQuantileProfiles(DATA, i))
-	CutsS.append(GetQuantileProfiles(DATASUB, i))
-for i in CutsD:
+D = []
+S = []
+for i in [0.5, 0.75, 0.9, 0.95]:
+	HD = GetQuantileProfiles(DATA, i)
+	D.append(HD)
+	HS = GetQuantileProfiles(DATASUB, i)
+	S.append(HS)
+for i in D:
 	GoodPlotFormat(i, "thinline", ROOT.kRed, 1)
-for i in CutsS:
+for i in S:
 	GoodPlotFormat(i, "thinline", ROOT.kRed, 1)
 
 DATA.SetStats(0)
 DATASUB.SetStats(0)
 
-C = TCanvas()
+C = ROOT.TCanvas("C", "", 1000, 450)
 C.Divide(2,1)
 C.cd(1)
+ROOT.gPad.SetLeftMargin(0.25)
 DATA.Draw("col")
-for i in CutsD:
+for i in D:
 	i.Draw("histsame")
 C.cd(2)
+ROOT.gPad.SetLeftMargin(0.25)
 DATASUB.Draw("col")
-for i in CutsS:
+for i in S:
 	i.Draw("histsame")
-
+C.Print("../results/"+NAME+"/CorrCheck.root")
+C.Print("../results/"+NAME+"/CorrCheck.png")
 
 outF.Close()
