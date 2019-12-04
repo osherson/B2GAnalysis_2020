@@ -1,7 +1,7 @@
 import ROOT
 
 ########## PAYLOAD ########### Ask oshersonmarc@gmail.com for further clarification
-NAME = "TEST" # THIS IS THE NAME OF THIS ANALYSIS
+NAME = "MIX" # THIS IS THE NAME OF THIS ANALYSIS
 
 def MakeNBinsFromMinToMax(N,Min,Max): # helper for making large bin arrays makes N bins between Min and Max (same as you're feed to a TH1F)
 	BINS = []
@@ -33,14 +33,14 @@ Blind = False
 
 # The sum of these files will be used as the data:
 DATA_FILES = [
-				"/home/rek81/userArea/treemaker_version_May7/CMSSW_10_2_9/src/PICOTREES_WITH_TTBARvariables/June2019/QCD/trig_800or900/2016_HTQCD_trigHT900.root",
-				"/home/rek81/userArea/treemaker_version_May7/CMSSW_10_2_9/src/PICOTREES_WITH_TTBARvariables/June2019/TTBAR/ttbar.root"
+				"/home/rek81/userArea/treemaker_version_May7/CMSSW_10_2_9/src/PICOTREES_WITH_TTBARvariables/PICOTREE_ADDED_DEEPBBTAG/OUTPUTS_WITH_DEEPBBTAG/QCD_HT/2016_HTQCD.root",
+				"/home/rek81/userArea/treemaker_version_May7/CMSSW_10_2_9/src/PICOTREES_WITH_TTBARvariables/PICOTREE_ADDED_DEEPBBTAG/OUTPUTS_WITH_DEEPBBTAG/TTBAR/ttbar.root"
 			]
 NAME_OF_TREE = "tree_nominal"
 
 # The sum of these files will be used as the ttbar, including where it needs to be subtracted from the "data"
 TTBAR_FILES = [
-				"/home/rek81/userArea/treemaker_version_May7/CMSSW_10_2_9/src/PICOTREES_WITH_TTBARvariables/June2019/TTBAR/ttbar.root"
+				"/home/rek81/userArea/treemaker_version_May7/CMSSW_10_2_9/src/PICOTREES_WITH_TTBARvariables/PICOTREE_ADDED_DEEPBBTAG/OUTPUTS_WITH_DEEPBBTAG/TTBAR/ttbar.root"
 			]
 
 # WEIGHTS:
@@ -53,30 +53,26 @@ DATA_WEIGHT = "1.0"
 MC_WEIGHT = "36900.*weight_xsN*weight_PU"
 
 # signals (these will not be summed, each signal is treated independently).
-# The format for including these is ([FILE], WEIGHT, TREE, NAME, TITLE, XS),
+# The format for including these is ([FILE], WEIGHT, TREE, NAME, TITLE),
 # where TREE is the name of the TTree, the NAME is an internal convention for the code and the TITLE is what will be plotted in legends
-# Finally, XS is the cross section in fb (this is for limit setting, so ideally it's the same as in the weight)
 SIG = [
-		[["/home/rek81/userArea/treemaker_version_May7/CMSSW_10_2_9/src/PICOTREES_WITH_TTBARvariables/June2019/Xaa_SIGNAL/X1000a50.root"],
+		[["/home/rek81/userArea/treemaker_version_May7/CMSSW_10_2_9/src/PICOTREES_WITH_TTBARvariables/PICOTREE_ADDED_DEEPBBTAG/X1000a50_test.root"],
 			"9.59447*36.9*weight_xsN*weight_PU",
 			"tree_nominal",
 			"X1000a50",
-			"X_{1000} #rightarrow a_{50}a_{50}",
-			9.59447],
+			"X_{1000} #rightarrow a_{50}a_{50}"],
 			
-		[["/home/rek81/userArea/treemaker_version_May7/CMSSW_10_2_9/src/PICOTREES_WITH_TTBARvariables/June2019/Xaa_SIGNAL/X1500a50.root"],
-			"0.847454*36.9*weight_xsN*weight_PU",
-			"tree_nominal",
-			"X1500a50",
-			"X_{1500} #rightarrow a_{50}a_{50}",
-			0.847454],
+		#[["/home/rek81/userArea/treemaker_version_May7/CMSSW_10_2_9/src/PICOTREES_WITH_TTBARvariables/June2019/Xaa_SIGNAL/X1500a50.root"],
+		#	"0.847454*36.9*weight_xsN*weight_PU",
+		#	"tree_nominal",
+		#	"X1500a50",
+		#	"X_{1500} #rightarrow a_{50}a_{50}"],
 			
-		[["/home/rek81/userArea/treemaker_version_May7/CMSSW_10_2_9/src/PICOTREES_WITH_TTBARvariables/June2019/Xaa_SIGNAL/X2000a50.root"],
-			"0.122826*36.9*weight_xsN*weight_PU",
-			"tree_nominal",
-			"X2000a50",
-			"X_{2000} #rightarrow a_{50}a_{50}",
-			0.122826]
+		#[["/home/rek81/userArea/treemaker_version_May7/CMSSW_10_2_9/src/PICOTREES_WITH_TTBARvariables/June2019/Xaa_SIGNAL/X2000a50.root"],
+		#	 "0.122826*36.9*weight_xsN*weight_PU",
+		#	"tree_nominal",
+		#	"X2000a50",
+		#	"X_{2000} #rightarrow a_{50}a_{50}"]
 ]
 # Signal systematics: This section is a bit complicated.
 # If a weight is stored in the weights structure, for example the PU weight, you can tell the code to make a shape systematic by adding something to the SysWeighted.
@@ -111,13 +107,13 @@ etaBins = MakeNBinsFromMinToMax(20,-3.,3.)
 pTBins = MakeNBinsFromMinToMax(50,300.,1800.)
 EstVars = 	[
 				("evt_aM", jmBins, "Average Jet Mass (GeV)", True),
-				#("evt_HT", HTVarBins, "Event HT (GeV)", False),
-				#("J1SDM", jmBins, "Leading Jet Soft Drop Mass (GeV)", False),
-				#("J2SDM", jmBins, "Subleading Jet Soft Drop Mass (GeV)", False),
-				#("J1pt", pTBins, "Leading Jet p_{T} (GeV)", False),
-				#("J2pt", pTBins, "Subleading Jet p_{T} (GeV)", False),
-				#("J1eta", etaBins, "Leading Jet #eta", False),
-				#("J2eta", etaBins, "Subleading #eta", False),
+				("evt_HT", HTVarBins, "Event HT (GeV)", False),
+				("J1SDM", jmBins, "Leading Jet Soft Drop Mass (GeV)", False),
+				("J2SDM", jmBins, "Subleading Jet Soft Drop Mass (GeV)", False),
+				("J1pt", pTBins, "Leading Jet p_{T} (GeV)", False),
+				("J2pt", pTBins, "Subleading Jet p_{T} (GeV)", False),
+				("J1eta", etaBins, "Leading Jet #eta", False),
+				("J2eta", etaBins, "Subleading #eta", False),
 				("evt_XM", XVarBins, "Dijet Mass (GeV)", True)
 			]
 
@@ -129,14 +125,14 @@ jm2DBins = MakeNBinsFromMinToMax(20,15.,265.)
 eta2DBins = MakeNBinsFromMinToMax(6,-3.,3.)
 
 EstVars2D = [
-				#["evt_aM", jm2DBins, "Average Jet Mass (GeV)","evt_XM", X2DVarBins, "Dijet Mass (GeV)", True],
+				["evt_aM", jm2DBins, "Average Jet Mass (GeV)","evt_XM", X2DVarBins, "Dijet Mass (GeV)", True],
 				#["J1eta", eta2DBins, "Leading Jet #eta","J2eta", eta2DBins, "Subleading #eta", False],
 				#["J1SDM", jm2DBins, "Leading Jet Soft Drop Mass (GeV)","J2SDM", jm2DBins, "Subleading Jet Soft Drop Mass (GeV)", False]
 			]
 
 ## CUTS (all these need to be in RDF format: && instead of just &)
 #Preselection (will be applied to ALL plots produced by this code)
-PRESELECTION = "J1dbtag>0.6 && evt_HT>900 && J2pt>300 && evt_Masym>0.0 && evt_Masym<0.1"
+PRESELECTION = "J1DeepBBtag>0.86 && evt_HT>900 && J2pt>300 && evt_Masym>0.0 && evt_Masym<0.1"
 # What variable do we use to separate region A and C from B and D?
 VAR_ACvBD = ("J2dbtag", MakeNBinsFromMinToMax(20, -1.,1.), "Subleading Jet Double-B Score") # Same format as the FitVar
 # What cut do you apply to it (define the passing and failing requirement))?
@@ -148,7 +144,7 @@ VAR_ABvCD = ("evt_Deta", MakeNBinsFromMinToMax(20,0.,4.), "#Delta#eta") # Same f
 pass_ABvCD = "<1.5"
 fail_ABvCD = ">1.5"
 # Are there any extra cuts on the signal region you would like to use? (e.g. if you want to measure the rate in a region with more statistics)
-ExSigCuts = "J1dbtag>0.8 && J2SDM > 12.5"
+ExSigCuts = "J2SDM > 12.5"
 
 
 ### THE FIT: Define and initialize your fit here.
@@ -166,9 +162,13 @@ def FIT(name):
 
 ### COMBINE OPTIONS:
 # NTOYS is the number of toys for statistical tests, bias tests, etc. Large numbers = better results but will run slower
-NTOYS = 100
-# Extra Combine options for intial computation. This in case combine needs a little fidgiting. Probably ask Marc about this!
-EXTRACOMBINEOPTION = "--setParameters P0=0.1"
+NTOYS = 500
+
+
+
+
+
+
 
 
 
