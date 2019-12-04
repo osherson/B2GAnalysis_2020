@@ -11,7 +11,6 @@ if not Blind:
 			if not VAR[3]: continue
 			cardname = VAR[0]+"_"+Sigs[3]
 			# MAKE NUIS PULL PLOT:
-			print "Running combine for:   " + cardname
 			os.system("combine ../results/"+NAME+"/Card_"+cardname+".txt -M FitDiagnostics --saveShapes --saveWithUncertainties " + EXTRACOMBINEOPTION)
 			FDFile = ROOT.TFile("fitDiagnostics.root")
 			fit_b = ROOT.RooFitResult(FDFile.Get("fit_b"))
