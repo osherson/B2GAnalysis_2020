@@ -37,8 +37,9 @@ echo -e " ${RED}> Making the data card! ${NC}"
 python MakeCards.py
 
 echo -e " ${RED}> Using combine to run fits! ${NC}"
+python GetLimits.py
 python DoCombineSteps.py
-python DoCombineSteps2.py
+#python DoCombineSteps2.py
 
 echo -e " ${RED}> Cleaning up... ${NC}"
 python Cleanup.py

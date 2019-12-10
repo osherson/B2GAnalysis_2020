@@ -29,6 +29,32 @@ for Sigs in SIG:
 		p2 = T.limit*Sigs[5]
 		print [cardname, obs, m2, m1, exp, p1, p2]
 		LIM.append([cardname, obs, m2, m1, exp, p1, p2])
+		os.system("rm *.out")
+		os.system("rm *.root")
+	for VAR in EstVars2D:
+		if not VAR[6]: continue
+		cardname = VAR[0]+"_vs_"+VAR[3]+"_"+Sigs[3]
+		os.system("combine ../results/"+NAME+"/Card_"+cardname+".txt -M AsymptoticLimits " + EXTRACOMBINEOPTION)
+		F = ROOT.TFile("higgsCombineTest.AsymptoticLimits.mH120.root")
+		T = F.Get("limit")
+		T.GetEntry(5)
+		if not Blind:
+			obs = T.limit*Sigs[5]
+		else: obs = -1.0
+		T.GetEntry(0)
+		m2 = T.limit*Sigs[5]
+		T.GetEntry(1)
+		m1 = T.limit*Sigs[5]
+		T.GetEntry(2)
+		exp = T.limit*Sigs[5]
+		T.GetEntry(3)
+		p1 = T.limit*Sigs[5]
+		T.GetEntry(4)
+		p2 = T.limit*Sigs[5]
+		print [cardname, obs, m2, m1, exp, p1, p2]
+		LIM.append([cardname, obs, m2, m1, exp, p1, p2])
+		os.system("rm *.out")
+		os.system("rm *.root")
 
 text_file = open("../results/"+NAME+"/LIMITS.txt", "w")
 LimUGLYm2 = ROOT.TH1F("LimUGLYm2"+NAME, "", len(LIM), 0, len(LIM))

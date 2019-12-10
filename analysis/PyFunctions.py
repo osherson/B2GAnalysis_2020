@@ -26,6 +26,30 @@ def FindAndSetMax(*args):
 # -------------------------- #
 
 # -------------------------- #
+# Takes either one array or histograms or a set of histograms as input.
+# Will calculate the minimum and maximum across all histograms and sets them to 35% more than that for all histograms.
+# returns this maximum (as a float)
+def FindAndSetMinAndMax(*args):
+	if len(args) == 1: args = args[0]
+	maximum = 0.0
+	minimum = 9999999999.
+	for i in args:
+		i.SetStats(0)
+		t = i.GetMaximum()
+		tm = i.GetMinimum()
+		if t > maximum:
+			maximum = t
+		if tm < minimum:
+			minimum = tm
+	for j in args:
+		if minimum < 0.: newmin = minimum * 1.35
+		else: newmin = 0.65 * minimum
+		j.GetYaxis().SetRangeUser(newmin,maximum*1.35)#should be 1.35 (below as well)
+		j.SetLineWidth(2)
+	return (newmin, maximum*1.35)
+# -------------------------- #
+
+# -------------------------- #
 # Handy little script for color/line/fill/point/etc...
 def GoodPlotFormat(H, *args):
 	try: H.SetStats(0)

@@ -7,6 +7,117 @@ import os
 print "RUNNING COMBINE CARDS: (if not blinded)"
 if not Blind:
 	for Sigs in SIG:
+		for VAR in EstVars2D:
+			if not VAR[6]: continue
+			cardname = VAR[0]+"_vs_"+VAR[3]+"_"+Sigs[3]
+			os.system("combine ../results/"+NAME+"/Card_"+cardname+".txt -M FitDiagnostics --saveShapes --saveWithUncertainties " + EXTRACOMBINEOPTION)
+			FDFile = ROOT.TFile("fitDiagnostics.root")
+			fit_b = ROOT.RooFitResult(FDFile.Get("fit_b"))
+			fit_s = ROOT.RooFitResult(FDFile.Get("fit_s"))
+			Nuis = ["lumi", "trig", "BBSF", "TTA", "TTNorm"]
+			for i in range(NFITPAR):
+				Nuis.append("P"+str(i))
+			for i in SysWeighted:
+				Nuis.append(i[0])
+			for i in SysComputed:
+				Nuis.append(i[0])
+			NuisSPulls = ROOT.TH1F("NuisSPulls", "Post-Fit Nuissance Parameters;;#sigma", len(Nuis), 0, len(Nuis))
+			NuisBPulls = ROOT.TH1F("NuisBPulls", "Post-Fit Nuissance Parameters;;#sigma", len(Nuis), 0, len(Nuis))
+			NuisSPulls.SetStats(0)
+			NuisSPulls.GetYaxis().CenterTitle(True)
+			for b in range(NuisSPulls.GetNbinsX()):
+				N = fit_s.floatParsFinal().find(Nuis[b])
+				NuisSPulls.GetXaxis().SetBinLabel(b+1, Nuis[b])
+				n = N.getVal()
+				e = N.getError()
+				NuisSPulls.SetBinContent(b+1, n)
+				NuisSPulls.SetBinError(b+1, e)
+				N = fit_b.floatParsFinal().find(Nuis[b])
+				n = N.getVal()
+				e = N.getError()
+				NuisBPulls.SetBinContent(b+1, n)
+				NuisBPulls.SetBinError(b+1, e)
+			GoodPlotFormat(NuisBPulls, "markers", ROOT.kBlue, 20)
+			GoodPlotFormat(NuisSPulls, "markers", ROOT.kRed, 20)
+
+			Leg = ROOT.TLegend(0.2,0.8,0.8,0.89)
+			Leg.SetLineColor(0)
+			Leg.SetFillColor(0)
+			Leg.AddEntry(NuisBPulls, "background only", "PL")
+			Leg.AddEntry(NuisSPulls, "signal + background", "PL")
+
+			C_nuis = ROOT.TCanvas()
+			C_nuis.cd()
+			C_nuis.SetGridy()
+			NuisSPulls.Draw("e")
+			NuisSPulls.GetYaxis().SetRangeUser(-5.5,5.5)
+			NuisSPulls.Draw("samee")
+			NuisBPulls.Draw("samee")
+			Leg.Draw("same")
+			C_nuis.Print("../results/"+NAME+"/NuisPull_"+cardname+".root")
+			C_nuis.Print("../results/"+NAME+"/NuisPull_"+cardname+".png")
+
+			# Make unrolled proof plots:
+			rDATA = FDFile.Get("shapes_prefit/SigReg/data")
+			BKG_PREFIT = FDFile.Get("shapes_prefit/SigReg/total_background")
+			BKG_PRETT = FDFile.Get("shapes_prefit/SigReg/ttbar")
+			SIGNAL_PREFIT = FDFile.Get("shapes_prefit/SigReg/signal")
+			BKG_S = FDFile.Get("shapes_fit_b/SigReg/total_background")
+			BKG_STT = FDFile.Get("shapes_fit_b/SigReg/ttbar")
+			DATA = convertAsymGraph(rDATA, BKG_PREFIT, "data_"+cardname)
+
+			Pull = DATA.Clone("Pull"+cardname)
+			Pull.Add(BKG_PREFIT, -1)
+			BPull = BKG_S.Clone("BPull"+cardname)
+			BPull.Add(BKG_PREFIT, -1)
+			ErrOldUp, ErrOldDown = GetErrHists(BKG_PREFIT,"old_"+cardname)
+			ErrNewUp, ErrNewDown = GetErrHists(BKG_S,"new_"+cardname)
+			for b in [ErrNewDown, ErrNewUp, ErrOldDown, ErrOldUp]:
+				b.Add(BKG_PREFIT, -1)
+
+			ErrDataUp, ErrDataDown = GetErrHists(DATA,"data_"+cardname)
+			ErrDataUp.Add(ErrDataDown, DATA)
+			for b in [ErrNewDown, ErrNewUp, ErrOldDown, ErrOldUp, Pull, BPull]:
+				b.Divide(ErrDataUp)
+
+
+			FindAndSetMinAndMax(Pull, BPull, ErrOldDown, ErrOldUp, ErrNewDown, ErrNewUp)
+			BPull.GetYaxis().SetTitle("difference from prefit background / statistical uncertainty in data")
+			BPull.SetStats(0)
+
+			GoodPlotFormat(Pull, "markers", ROOT.kBlack, 20)
+			GoodPlotFormat(ErrOldDown, "thinline", ROOT.kBlue, 3)
+			GoodPlotFormat(ErrOldUp, "thinline", ROOT.kBlue, 3)
+			GoodPlotFormat(BPull, "thickline", ROOT.kRed, 1)
+			GoodPlotFormat(ErrNewDown, "thinline", ROOT.kRed, 2)
+			GoodPlotFormat(ErrNewUp, "thinline", ROOT.kRed, 2)
+
+			L = ROOT.TLegend(0.15,0.75,0.76,0.89)
+			L.SetNColumns(4)
+			L.SetLineColor(0)
+			L.SetFillColor(0)
+			L.AddEntry(Pull, "Data", "PE")
+			L.AddEntry(ErrOldDown, "Total Background Uncertainty (Pre-Fit)", "F")
+			L.AddEntry(BPull, "Total Background (background only)", "L")
+			L.AddEntry(ErrNewDown, "Total Background Uncertainty (background only)", "F")
+
+			C_CombWork2D = ROOT.TCanvas()
+			C_CombWork2D.cd()
+
+			BPull.Draw("hist")
+			for b in [ErrNewDown, ErrNewUp, ErrOldDown, ErrOldUp]:
+				b.Draw("samehist")
+			Pull.Draw("samee")
+			L.Draw("same")
+
+			ROOT.gPad.SetTicks(1,1)
+			ROOT.gPad.RedrawAxis()
+			AddCMSLumi(ROOT.gPad, plot_lumi, cmsextra)
+
+			C_CombWork2D.Print("../results/"+NAME+"/CombResult2D_B_"+cardname+".root")
+			C_CombWork2D.Print("../results/"+NAME+"/CombResult2D_B_"+cardname+".png")
+
+
 		for VAR in EstVars:
 			if not VAR[3]: continue
 			cardname = VAR[0]+"_"+Sigs[3]

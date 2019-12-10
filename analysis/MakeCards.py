@@ -178,7 +178,7 @@ for Sigs in SIG:
 		C.Print("../results/"+NAME+"/SIGSYS"+Sigs[3]+"_"+NAME+"_"+VAR[0]+".png")
 
 	for VAR in EstVars2D:
-		if not VAR[3]: continue
+		if not VAR[6]: continue
 		cardname = VAR[0]+"_vs_"+VAR[3]+"_"+Sigs[3]
 		print "Making datacard for " + VAR[0]+"/"+VAR[3] + ", " + Sigs[3]
 		print "Card and Shapes name:   " + cardname
