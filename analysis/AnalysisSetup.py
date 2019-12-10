@@ -27,6 +27,8 @@ print RegD
 
 try:
     os.stat("../results/"+NAME)
+    os.system("rm -rf ../results/"+NAME)
+    os.mkdir("../results/"+NAME) 
 except:
     os.mkdir("../results/"+NAME)       
 
