@@ -1,5 +1,5 @@
 import ROOT
-
+ROOT.gROOT.SetBatch(ROOT.kTRUE)
 ########## PAYLOAD ########### Ask oshersonmarc@gmail.com for further clarification
 NAME = "TEST" # THIS IS THE NAME OF THIS ANALYSIS
 
@@ -58,25 +58,11 @@ MC_WEIGHT = "36900.*weight_xsN*weight_PU"
 # Finally, XS is the cross section in fb (this is for limit setting, so ideally it's the same as in the weight)
 SIG = [
 		[["/home/rek81/userArea/treemaker_version_May7/CMSSW_10_2_9/src/PICOTREES_WITH_TTBARvariables/June2019/Xaa_SIGNAL/X1000a50.root"],
-			"9.59447*36.9*weight_xsN*weight_PU",
+			"10.0*36.9*weight_xsN*weight_PU",
 			"tree_nominal",
 			"X1000a50",
 			"X_{1000} #rightarrow a_{50}a_{50}",
-			9.59447],
-			
-		[["/home/rek81/userArea/treemaker_version_May7/CMSSW_10_2_9/src/PICOTREES_WITH_TTBARvariables/June2019/Xaa_SIGNAL/X1500a50.root"],
-			"0.847454*36.9*weight_xsN*weight_PU",
-			"tree_nominal",
-			"X1500a50",
-			"X_{1500} #rightarrow a_{50}a_{50}",
-			0.847454],
-			
-		[["/home/rek81/userArea/treemaker_version_May7/CMSSW_10_2_9/src/PICOTREES_WITH_TTBARvariables/June2019/Xaa_SIGNAL/X2000a50.root"],
-			"0.122826*36.9*weight_xsN*weight_PU",
-			"tree_nominal",
-			"X2000a50",
-			"X_{2000} #rightarrow a_{50}a_{50}",
-			0.122826]
+			10.0],
 ]
 # Signal systematics: This section is a bit complicated.
 # If a weight is stored in the weights structure, for example the PU weight, you can tell the code to make a shape systematic by adding something to the SysWeighted.
@@ -118,18 +104,20 @@ EstVars = 	[
 				#("J2pt", pTBins, "Subleading Jet p_{T} (GeV)", False),
 				#("J1eta", etaBins, "Leading Jet #eta", False),
 				#("J2eta", etaBins, "Subleading #eta", False),
-				("evt_XM", XVarBins, "Dijet Mass (GeV)", True)
+				#("evt_XM", XVarBins, "Dijet Mass (GeV)", False),
 			]
 
 # 2D Vars: These combinations will be processed as 2D hists and also unrolled.
 # Format as "treename, bins, title, othertreename, otherbins, othertitle"
 # The last bool is whether or not to create a combine card from this variable!
-X2DVarBins = MakeNBinsFromMinToMax(15,800.,2300.)
-jm2DBins = MakeNBinsFromMinToMax(20,15.,265.)
+#X2DVarBins = MakeNBinsFromMinToMax(15,800.,2300.)
+#jm2DBins = MakeNBinsFromMinToMax(15,15.,265.)
+X2DVarBins = [800.,900.,1000.,1100.,1200.,1300.,1400.,1500.,1750.,2000.,2500.]
+jm2DBins = [15.,20.,25.,30.,35.,40.,45.,50.,60.,70.,80.,90.,100.,125.,150.,200.,300.]
 eta2DBins = MakeNBinsFromMinToMax(6,-3.,3.)
 
 EstVars2D = [
-				#["evt_aM", jm2DBins, "Average Jet Mass (GeV)","evt_XM", X2DVarBins, "Dijet Mass (GeV)", True],
+				["evt_XM", X2DVarBins, "Dijet Mass (GeV)", "evt_aM", jm2DBins, "Average Jet Mass (GeV)", True],
 				#["J1eta", eta2DBins, "Leading Jet #eta","J2eta", eta2DBins, "Subleading #eta", False],
 				#["J1SDM", jm2DBins, "Leading Jet Soft Drop Mass (GeV)","J2SDM", jm2DBins, "Subleading Jet Soft Drop Mass (GeV)", False]
 			]
@@ -168,7 +156,7 @@ def FIT(name):
 # NTOYS is the number of toys for statistical tests, bias tests, etc. Large numbers = better results but will run slower
 NTOYS = 100
 # Extra Combine options for intial computation. This in case combine needs a little fidgiting. Probably ask Marc about this!
-EXTRACOMBINEOPTION = "--setParameters P0=0.1"
+EXTRACOMBINEOPTION = "--setParameters P0=0.25"
 
 
 

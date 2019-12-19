@@ -39,11 +39,11 @@ python MakeCards.py
 echo -e " ${RED}> Using combine to run fits! ${NC}"
 python GetLimits.py
 python DoCombineSteps.py
+python DoCombine2DSteps.py
 #python DoCombineSteps2.py
 
 echo -e " ${RED}> Cleaning up... ${NC}"
 python Cleanup.py
-rm TEMPPAY*
 
 end=`date +%s`
 echo -e "${RED}                    time = $((end-start)) seconds${NC}"

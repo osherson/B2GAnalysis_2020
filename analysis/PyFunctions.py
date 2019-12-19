@@ -112,7 +112,32 @@ def Reroll(H, VARS):
 			k = XY.GetBin(i+1,j+1)
 			index = H.FindBin(1 + j + i*nxb)
 			XY.SetBinContent(k, H.GetBinContent(index))
-			XY.SetBinError(k, (H.GetBinError(index))**2)
+			XY.SetBinError(k, (H.GetBinError(index)))
+	X = XY.ProjectionX("px_"+H.GetName(),1,nxb,"e")
+	Y = XY.ProjectionY("py_"+H.GetName(),1,nyb,"e")
+	return [X,Y,XY]
+# -------------------------- #
+
+# Same as above but backwards! Takes a 1D histogram representing a 2D space and produces the 2D and 1D projections:
+def RerollCombined(H, VARS):
+	X = TH1F("x_"+H.GetName(), ";"+VARS[2], len(VARS[1])-1, numpy.array(VARS[1]))
+	Y = TH1F("y_"+H.GetName(), ";"+VARS[5], len(VARS[4])-1, numpy.array(VARS[4]))
+		
+	XY = TH2F("xy_"+H.GetName(), ";"+VARS[2]+";"+VARS[5], len(VARS[1])-1, numpy.array(VARS[1]), len(VARS[4])-1, numpy.array(VARS[4]))
+
+	X.SetStats(0)
+	Y.SetStats(0)
+	XY.SetStats(0)
+
+	nxb = X.GetNbinsX()
+	nyb = Y.GetNbinsX()
+
+	for i in range(0,(nyb)):
+		for j in range(0,(nxb)):
+			k = XY.GetBin(i+1,j+1)
+			index = H.FindBin(0.5 + j + i*nxb)
+			XY.SetBinContent(k, H.GetBinContent(index))
+			XY.SetBinError(k, (H.GetBinError(index)))
 	X = XY.ProjectionX("px_"+H.GetName(),1,nxb,"e")
 	Y = XY.ProjectionY("py_"+H.GetName(),1,nyb,"e")
 	return [X,Y,XY]
@@ -122,11 +147,11 @@ def Reroll(H, VARS):
 # Returns the profile at a given cut from a given TH2F.
 def GetQuantileProfiles(Th2f, cut):
 		q1 = []
-		nxbins = Th2f.GetXaxis().GetNbins();
-		xlo = Th2f.GetXaxis().GetBinLowEdge(1);
-		xhi = Th2f.GetXaxis().GetBinUpEdge(Th2f.GetXaxis().GetNbins() );
+		nxbins = Th2f.GetXaxis().GetNbins()
+		xlo = Th2f.GetXaxis().GetBinLowEdge(1)
+		xhi = Th2f.GetXaxis().GetBinUpEdge(Th2f.GetXaxis().GetNbins() )
 		for i in range(nxbins):
-				H = Th2f.ProjectionY("ProjY"+str(i),i+1,i+1)
+				H = Th2f.ProjectionY("ProjY"+Th2f.GetName()+str(i),i+1,i+1)
 				probSum = array.array('d', [cut])
 				q = array.array('d', [0.0]*len(probSum))
 				H.GetQuantiles(len(probSum), q, probSum)
@@ -140,7 +165,7 @@ def GetQuantileProfiles(Th2f, cut):
 # -------------------------- #
 # Adds the CMS luminosity to the gPad
 def AddCMSLumi(pad, fb, extra):
-	cmsText     = "CMS " + extra;
+	cmsText     = "CMS " + extra
 	cmsTextFont   = 61  
 	lumiTextSize     = 0.45
 	lumiTextOffset   = 0.15
@@ -181,7 +206,7 @@ def convertAsymGraph(TG, template, name):
 		Hist.SetBinContent(i,0.)
 	for i in range(TG.GetN()):
 		Hist.SetBinContent(i+1,TG.GetY()[i]*(TG.GetErrorXlow(i)+TG.GetErrorXhigh(i)))
-	Hist.Sumw2()
+		Hist.SetBinError(i+1, TG.GetErrorY(i))
 	return Hist
 # -------------------------- #
 
