@@ -111,9 +111,9 @@ EstVars = 	[
 # Format as "treename, bins, title, othertreename, otherbins, othertitle"
 # The last bool is whether or not to create a combine card from this variable!
 #X2DVarBins = MakeNBinsFromMinToMax(15,800.,2300.)
-#jm2DBins = MakeNBinsFromMinToMax(15,15.,265.)
+jm2DBins = MakeNBinsFromMinToMax(15,15.,265.)
 X2DVarBins = [800.,900.,1000.,1100.,1200.,1300.,1400.,1500.,1750.,2000.,2500.]
-jm2DBins = [15.,20.,25.,30.,35.,40.,45.,50.,60.,70.,80.,90.,100.,125.,150.,200.,300.]
+#jm2DBins = [15.,20.,25.,30.,35.,40.,45.,50.,60.,70.,80.,90.,100.,125.,150.,200.,300.]
 eta2DBins = MakeNBinsFromMinToMax(6,-3.,3.)
 
 EstVars2D = [
