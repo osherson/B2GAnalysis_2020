@@ -191,4 +191,31 @@ for VAR in EstVars2D:
 	C_var_2D_tmp.Print("../results/"+NAME+"/VAREST2D_"+NAME+"_"+VAR[0] + "_vs_" + VAR[3]+".root")
 	C_var_2D_tmp.Print("../results/"+NAME+"/VAREST2D_"+NAME+"_"+VAR[0] + "_vs_" + VAR[3]+".png")
 
+
+	### THIS BLOCK IS FOR MAKING THE TTBAR TEMPLATES PLOT:
+
+	Att2_au = outF.Get("rA_ttbar_au_"+VAR[0]+"_"+VAR[3])
+	Att2_ad = outF.Get("rA_ttbar_ad_"+VAR[0]+"_"+VAR[3])
+	
+	Att_au = Unroll(Att2_au)
+	Att_ad = Unroll(Att2_ad)
+	FindAndSetMax(Att, Att_au, Att_ad)
+	GoodPlotFormat(Att_au, "thinline", ROOT.kRed+1, 3)
+	GoodPlotFormat(Att_ad, "thinline", ROOT.kRed-1, 2)
+	ttLeg = ROOT.TLegend(0.65,0.65,0.89,0.89)
+	ttLeg.SetLineColor(0)
+	ttLeg.SetFillColor(0)
+	ttLeg.AddEntry(Att, "t#bar{t} component (nominal)", "L")
+	ttLeg.AddEntry(Att_au, "t#bar{t} component (#alpha up)", "L")
+	ttLeg.AddEntry(Att_ad, "t#bar{t} component (#alpha down)", "L")
+	C_tttemp = ROOT.TCanvas()
+	C_tttemp.cd()
+	ROOT.gPad.SetTicks(1,1)
+	Att.Draw("hist")
+	Att_au.Draw("histsame")
+	Att_ad.Draw("histsame")
+	ttLeg.Draw("same")
+	C_tttemp.Print("../results/"+NAME+"/TTTEMP2D_"+NAME+"_"+VAR[0] + "_vs_" + VAR[3]+".root")
+	C_tttemp.Print("../results/"+NAME+"/TTTEMP2D_"+NAME+"_"+VAR[0] + "_vs_" + VAR[3]+".png")
+
 outF.Close()

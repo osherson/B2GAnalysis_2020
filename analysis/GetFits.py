@@ -155,8 +155,8 @@ L_ttbar.AddEntry(F_CD_nd, "Fit to PF for low normalization t#bar{t}", "L")
 L_ttbar.Draw("same")
 
 AddCMSLumi(ROOT.gPad, plot_lumi, cmsextra)
-C_ttbar.Print("../results/"+NAME+"/ABCDFIT_ttbar_"+NAME+".root")
-C_ttbar.Print("../results/"+NAME+"/ABCDFIT_ttbar_"+NAME+".png")
+C_ttbar.Print("../results/"+NAME+"/ttbarFitEffects.root")
+C_ttbar.Print("../results/"+NAME+"/ttbarFitEffects.png")
 
 outF.cd()
 

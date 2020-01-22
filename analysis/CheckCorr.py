@@ -5,10 +5,12 @@ from TEMPPAYLOAD import *
 outF = ROOT.TFile("../results/"+NAME+"/Analysis_"+NAME+".root", "update")
 
 DATA = outF.Get("presel_ABCD_data")
+DATA.SetTitle("preselection with no further cuts")
 TTBAR = outF.Get("presel_ABCD_ttbar")
 
 DATASUB = DATA.Clone("presel_ABCD_sub")
 DATASUB.Add(TTBAR, -1.)
+DATASUB.SetTitle("preselection with t#bar{t} subtracted")
 
 D = []
 S = []

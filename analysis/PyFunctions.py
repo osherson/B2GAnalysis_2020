@@ -134,7 +134,7 @@ def RerollCombined(H, VARS):
 
 	for i in range(0,(nyb)):
 		for j in range(0,(nxb)):
-			k = XY.GetBin(i+1,j+1)
+			k = XY.GetBin(j+1,i+1)
 			index = H.FindBin(0.5 + j + i*nxb)
 			XY.SetBinContent(k, H.GetBinContent(index))
 			XY.SetBinError(k, (H.GetBinError(index)))
