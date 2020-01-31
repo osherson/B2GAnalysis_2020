@@ -22,8 +22,11 @@ source MakePico.sh [output] [inputPath] [goBetween] [year] [Run/MC] [TriggerList
 - weight: 1 for data, cross-section for MC
 
 Example (MC):
+
 source MakeNano.sh X1000a50 /cms/xaastorage/NanoAOD/2016/JUNE19/Xaa_Signal/X1000a50/ /cms/osherson/NanoToolOutput 2016 MC triglist.txt 9.8
+
 Example (Data, just running on one file):
+
 source MakeNano.sh Data16C /cms/xaastorage/NanoAOD/2016/JUNE19/JetHT_DATA/Run2016C/910727BA-1093-0343-B569-CD480F6CCC7F /cms/osherson/NanoToolOutput 2016 C triglist.txt 1
 
 source MakeNano.sh X1000a50 /cms/xaastorage/NanoAOD/2016/JUNE19/Xaa_Signal/X1000a50/ /cms/osherson/NanoToolOutput 2016 MC triglist.txt 1
