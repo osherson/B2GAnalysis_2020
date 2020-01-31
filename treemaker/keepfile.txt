@@ -1,0 +1,15 @@
+drop *
+keep FatJet*
+keep Jet_pt
+keep Jet_eta
+keep nGenPart
+keep GenPart_pdgId
+keep GenPart_status
+keep GenPart_pt
+keep pu*
+drop FatJet_deepTag_*
+drop *raw
+drop FatJet_area
+drop FatJet_sub*
+drop FatJet_btagC*
+drop FatJet_tau*
