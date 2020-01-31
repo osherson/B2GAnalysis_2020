@@ -1,13 +1,21 @@
 # Install:
 
 cmsrel CMSSW_10_6_2
+
 cd CMSSW_10_6_2/src
+
 git clone https://github.com/cms-nanoAOD/nanoAOD-tools.git PhysicsTools/NanoAODTools
+
 git clone https://github.com/cms-analysis/HiggsAnalysis-CombinedLimit.git HiggsAnalysis/CombinedLimit
+
 cmsenv
+
 scram b -j8
+
 git clone https://github.com/osherson/ABCD_multivar.git
+
 mkdir results
+
 
 # Running (Treemaker):
 This code (in the treemaker folder) turns nanoAOD into useable picotrees.
