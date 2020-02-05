@@ -30,8 +30,10 @@ class picoTree:
         self.O.cd()
         self.T_nominal = TTree("tree_nominal", "tree_nominal")
         if self.mc:
-            self.T_jes_up = TTree("tree_jes_up", "tree_jes_up")
-            self.T_jes_down = TTree("tree_jes_down", "tree_jes_down")
+            self.T_jesCorr_up = TTree("tree_jesCorr_up", "tree_jesCorr_up")
+            self.T_jesCorr_down = TTree("tree_jesCorr_down", "tree_jesCorr_down")
+            self.T_jesUnCorr_up = TTree("tree_jesUnCorr_up", "tree_jesUnCorr_up")
+            self.T_jesUnCorr_down = TTree("tree_jesUnCorr_down", "tree_jesUnCorr_down")
             self.T_jer_up = TTree("tree_jer_up", "tree_jer_up")
             self.T_jer_down = TTree("tree_jer_down", "tree_jer_down")
             self.T_jms_up = TTree("tree_jms_up", "tree_jms_up")
@@ -104,7 +106,8 @@ class picoTree:
         print "Filling from " + inputFile
         F = TFile(inputFile)
         self.T = F.Get("Events")
-        for e in self.T:
+        for e in range(self.T.GetEntries()):
+            self.T.GetEvent(e)
             if not min(self.T.FatJet_msoftdrop_nom[0], self.T.FatJet_msoftdrop_nom[1]) > 0.: continue
             if self.year == "2016": IDCUT = 2
             if self.year == "2017": IDCUT = 5
@@ -131,8 +134,14 @@ class picoTree:
                 self.WT[0] = self.TrigHist.GetBinContent(self.TrigHist.FindBin(self.HT))
                 self.WTup[0] = min(1.0, self.TrigHist.GetBinContent(self.TrigHist.FindBin(self.HT)) + self.TrigHist.GetBinError(self.TrigHist.FindBin(self.HT)))
                 self.WTdn[0] = max(0.0, self.TrigHist.GetBinContent(self.TrigHist.FindBin(self.HT)) - self.TrigHist.GetBinError(self.TrigHist.FindBin(self.HT)))
-                self.FillJetVars(self.T.FatJet_pt_jesTotalUp, self.T.FatJet_mass_jesTotalUp, self.T.FatJet_msoftdrop_jesTotalUp, self.T_jes_up)
-                self.FillJetVars(self.T.FatJet_pt_jesTotalDown, self.T.FatJet_mass_jesTotalDown, self.T.FatJet_msoftdrop_jesTotalDown, self.T_jes_down)
+                Kin_jesCorrUp = self.GetJESComp("C", "up")
+                Kin_jesCorrDown = self.GetJESComp("C", "down")
+                Kin_jesUnCorrUp = self.GetJESComp("U", "up")
+                Kin_jesUnCorrDown = self.GetJESComp("U", "down")
+                self.FillJetVars(Kin_jesCorrUp[0], Kin_jesCorrUp[1], Kin_jesCorrUp[2], self.T_jesCorr_up)
+                self.FillJetVars(Kin_jesCorrDown[0], Kin_jesCorrDown[1], Kin_jesCorrDown[2], self.T_jesCorr_down)
+                self.FillJetVars(Kin_jesUnCorrUp[0], Kin_jesUnCorrUp[1], Kin_jesUnCorrUp[2], self.T_jesUnCorr_up)
+                self.FillJetVars(Kin_jesUnCorrDown[0], Kin_jesUnCorrDown[1], Kin_jesUnCorrDown[2], self.T_jesUnCorr_down)
                 self.FillJetVars(self.T.FatJet_pt, self.T.FatJet_mass_jmsUp, self.T.FatJet_msoftdrop_jmsUp, self.T_jms_up)
                 self.FillJetVars(self.T.FatJet_pt, self.T.FatJet_mass_jmsDown, self.T.FatJet_msoftdrop_jmsDown, self.T_jms_down)
                 self.FillJetVars(self.T.FatJet_pt_jerUp, self.T.FatJet_mass_jerUp, self.T.FatJet_msoftdrop_jerUp, self.T_jer_up)
@@ -140,6 +149,330 @@ class picoTree:
                 self.FillJetVars(self.T.FatJet_pt, self.T.FatJet_mass_jmrUp, self.T.FatJet_msoftdrop_jmrUp, self.T_jmr_up)
                 self.FillJetVars(self.T.FatJet_pt, self.T.FatJet_mass_jmrDown, self.T.FatJet_msoftdrop_jmrDown, self.T_jmr_down)
 
+    def GetJESComp(self, corr, which):
+        PT = []
+        MASS = []
+        SDM = []
+        for jet in [0,1]:
+            scale = 0.
+            pt = 0.
+            mass = 0.
+            sdm = 0.
+            if which == "up":
+                if corr == "C":
+                    print self.T.FatJet_pt_jesAbsoluteMPFBiasUp[jet]
+                    pt = pt + 2.*self.T.FatJet_pt_jesAbsoluteMPFBiasUp[jet]
+                    mass = mass + 2.*self.T.FatJet_mass_jesAbsoluteMPFBiasUp[jet]
+                    sdm = sdm + 2.*self.T.FatJet_msoftdrop_jesAbsoluteMPFBiasUp[jet]
+                    scale += 2.
+                    pt = pt + 2.*self.T.FatJet_pt_jesAbsoluteScaleUp[jet]
+                    mass = mass + 2.*self.T.FatJet_mass_jesAbsoluteScaleUp[jet]
+                    sdm = sdm + 2.*self.T.FatJet_msoftdrop_jesAbsoluteScaleUp[jet]
+                    scale += 2.
+                    pt = pt + 2.*self.T.FatJet_pt_jesFlavorQCDUp[jet]
+                    mass = mass + 2.*self.T.FatJet_mass_jesFlavorQCDUp[jet]
+                    sdm = sdm + 2.*self.T.FatJet_msoftdrop_jesFlavorQCDUp[jet]
+                    scale += 2.
+                    pt = pt + 2.*self.T.FatJet_pt_jesFragmentationUp[jet]
+                    mass = mass + 2.*self.T.FatJet_mass_jesFragmentationUp[jet]
+                    sdm = sdm + 2.*self.T.FatJet_msoftdrop_jesFragmentationUp[jet]
+                    scale += 2.
+                    pt = pt + self.T.FatJet_pt_jesPileUpDataMCUp[jet]
+                    mass = mass + self.T.FatJet_mass_jesPileUpDataMCUp[jet]
+                    sdm = sdm + self.T.FatJet_msoftdrop_jesPileUpDataMCUp[jet]
+                    scale += 1.
+                    pt = pt + self.T.FatJet_pt_jesPileUpPtBBUp[jet]
+                    mass = mass + self.T.FatJet_mass_jesPileUpPtBBUp[jet]
+                    sdm = sdm + self.T.FatJet_msoftdrop_jesPileUpPtBBUp[jet]
+                    scale += 1.
+                    pt = pt + self.T.FatJet_pt_jesPileUpPtEC1Up[jet]
+                    mass = mass + self.T.FatJet_mass_jesPileUpPtEC1Up[jet]
+                    sdm = sdm + self.T.FatJet_msoftdrop_jesPileUpPtEC1Up[jet]
+                    scale += 1.
+                    pt = pt + self.T.FatJet_pt_jesPileUpPtEC2Up[jet]
+                    mass = mass + self.T.FatJet_mass_jesPileUpPtEC2Up[jet]
+                    sdm = sdm + self.T.FatJet_msoftdrop_jesPileUpPtEC2Up[jet]
+                    scale += 1.
+                    pt = pt + self.T.FatJet_pt_jesPileUpPtHFUp[jet]
+                    mass = mass + self.T.FatJet_mass_jesPileUpPtHFUp[jet]
+                    sdm = sdm + self.T.FatJet_msoftdrop_jesPileUpPtHFUp[jet]
+                    scale += 1.
+                    pt = pt + self.T.FatJet_pt_jesPileUpPtRefUp[jet]
+                    mass = mass + self.T.FatJet_mass_jesPileUpPtRefUp[jet]
+                    sdm = sdm + self.T.FatJet_msoftdrop_jesPileUpPtRefUp[jet]
+                    scale += 1.
+                    pt = pt + self.T.FatJet_pt_jesRelativeFSRUp[jet]
+                    mass = mass + self.T.FatJet_mass_jesRelativeFSRUp[jet]
+                    sdm = sdm + self.T.FatJet_msoftdrop_jesRelativeFSRUp[jet]
+                    scale += 1.
+                    pt = pt + self.T.FatJet_pt_jesRelativeJERHFUp[jet]
+                    mass = mass + self.T.FatJet_mass_jesRelativeJERHFUp[jet]
+                    sdm = sdm + self.T.FatJet_msoftdrop_jesRelativeJERHFUp[jet]
+                    scale += 1.
+                    pt = pt + self.T.FatJet_pt_jesRelativePtBBUp[jet]
+                    mass = mass + self.T.FatJet_mass_jesRelativePtBBUp[jet]
+                    sdm = sdm + self.T.FatJet_msoftdrop_jesRelativePtBBUp[jet]
+                    scale += 1.
+                    pt = pt + self.T.FatJet_pt_jesRelativePtHFUp[jet]
+                    mass = mass + self.T.FatJet_mass_jesRelativePtHFUp[jet]
+                    sdm = sdm + self.T.FatJet_msoftdrop_jesRelativePtHFUp[jet]
+                    scale += 1.
+                    pt = pt + self.T.FatJet_pt_jesRelativeBalUp[jet]
+                    mass = mass + self.T.FatJet_mass_jesRelativeBalUp[jet]
+                    sdm = sdm + self.T.FatJet_msoftdrop_jesRelativeBalUp[jet]
+                    scale += 1.
+                    pt = pt + 2.*self.T.FatJet_pt_jesSinglePionECALUp[jet]
+                    mass = mass + 2.*self.T.FatJet_mass_jesSinglePionECALUp[jet]
+                    sdm = sdm + 2.*self.T.FatJet_msoftdrop_jesSinglePionECALUp[jet]
+                    scale += 2.
+                    pt = pt + 2.*self.T.FatJet_pt_jesSinglePionHCALUp[jet]
+                    mass = mass + 2.*self.T.FatJet_mass_jesSinglePionHCALUp[jet]
+                    sdm = sdm + 2.*self.T.FatJet_msoftdrop_jesSinglePionHCALUp[jet]
+                    scale += 2.
+                else:
+                    pt = pt + 2.*self.T.FatJet_pt_jesAbsoluteStatUp[jet]
+                    mass = mass + 2.*self.T.FatJet_mass_jesAbsoluteStatUp[jet]
+                    sdm = sdm + 2.*self.T.FatJet_msoftdrop_jesAbsoluteStatUp[jet]
+                    scale += 2.
+                    pt = pt + self.T.FatJet_pt_jesPileUpDataMCUp[jet]
+                    mass = mass + self.T.FatJet_mass_jesPileUpDataMCUp[jet]
+                    sdm = sdm + self.T.FatJet_msoftdrop_jesPileUpDataMCUp[jet]
+                    scale += 1.
+                    pt = pt + self.T.FatJet_pt_jesPileUpPtBBUp[jet]
+                    mass = mass + self.T.FatJet_mass_jesPileUpPtBBUp[jet]
+                    sdm = sdm + self.T.FatJet_msoftdrop_jesPileUpPtBBUp[jet]
+                    scale += 1.
+                    pt = pt + self.T.FatJet_pt_jesPileUpPtEC1Up[jet]
+                    mass = mass + self.T.FatJet_mass_jesPileUpPtEC1Up[jet]
+                    sdm = sdm + self.T.FatJet_msoftdrop_jesPileUpPtEC1Up[jet]
+                    scale += 1.
+                    pt = pt + self.T.FatJet_pt_jesPileUpPtEC2Up[jet]
+                    mass = mass + self.T.FatJet_mass_jesPileUpPtEC2Up[jet]
+                    sdm = sdm + self.T.FatJet_msoftdrop_jesPileUpPtEC2Up[jet]
+                    scale += 1.
+                    pt = pt + self.T.FatJet_pt_jesPileUpPtHFUp[jet]
+                    mass = mass + self.T.FatJet_mass_jesPileUpPtHFUp[jet]
+                    sdm = sdm + self.T.FatJet_msoftdrop_jesPileUpPtHFUp[jet]
+                    scale += 1.
+                    pt = pt + self.T.FatJet_pt_jesPileUpPtRefUp[jet]
+                    mass = mass + self.T.FatJet_mass_jesPileUpPtRefUp[jet]
+                    sdm = sdm + self.T.FatJet_msoftdrop_jesPileUpPtRefUp[jet]
+                    scale += 1.
+                    pt = pt + self.T.FatJet_pt_jesRelativeFSRUp[jet]
+                    mass = mass + self.T.FatJet_mass_jesRelativeFSRUp[jet]
+                    sdm = sdm + self.T.FatJet_msoftdrop_jesRelativeFSRUp[jet]
+                    scale += 1.
+                    pt = pt + 2.*self.T.FatJet_pt_jesRelativeJEREC1Up[jet]
+                    mass = mass + 2.*self.T.FatJet_mass_jesRelativeJEREC1Up[jet]
+                    sdm = sdm + 2.*self.T.FatJet_msoftdrop_jesRelativeJEREC1Up[jet]
+                    scale += 2.
+                    pt = pt + 2.*self.T.FatJet_pt_jesRelativeJEREC2Up[jet]
+                    mass = mass + 2.*self.T.FatJet_mass_jesRelativeJEREC2Up[jet]
+                    sdm = sdm + 2.*self.T.FatJet_msoftdrop_jesRelativeJEREC2Up[jet]
+                    scale += 2.
+                    pt = pt + self.T.FatJet_pt_jesRelativeJERHFUp[jet]
+                    mass = mass + self.T.FatJet_mass_jesRelativeJERHFUp[jet]
+                    sdm = sdm + self.T.FatJet_msoftdrop_jesRelativeJERHFUp[jet]
+                    scale += 1.
+                    pt = pt + self.T.FatJet_pt_jesRelativePtBBUp[jet]
+                    mass = mass + self.T.FatJet_mass_jesRelativePtBBUp[jet]
+                    sdm = sdm + self.T.FatJet_msoftdrop_jesRelativePtBBUp[jet]
+                    scale += 1.
+                    pt = pt + 2.*self.T.FatJet_pt_jesRelativePtEC1Up[jet]
+                    mass = mass + 2.*self.T.FatJet_mass_jesRelativePtEC1Up[jet]
+                    sdm = sdm + 2.*self.T.FatJet_msoftdrop_jesRelativePtEC1Up[jet]
+                    scale += 2.
+                    pt = pt + 2.*self.T.FatJet_pt_jesRelativePtEC2Up[jet]
+                    mass = mass + 2.*self.T.FatJet_mass_jesRelativePtEC2Up[jet]
+                    sdm = sdm + 2.*self.T.FatJet_msoftdrop_jesRelativePtEC2Up[jet]
+                    scale += 2.
+                    pt = pt + self.T.FatJet_pt_jesRelativePtHFUp[jet]
+                    mass = mass + self.T.FatJet_mass_jesRelativePtHFUp[jet]
+                    sdm = sdm + self.T.FatJet_msoftdrop_jesRelativePtHFUp[jet]
+                    scale += 1.
+                    pt = pt + self.T.FatJet_pt_jesRelativeBalUp[jet]
+                    mass = mass + self.T.FatJet_mass_jesRelativeBalUp[jet]
+                    sdm = sdm + self.T.FatJet_msoftdrop_jesRelativeBalUp[jet]
+                    scale += 1.
+                    pt = pt + 2.*self.T.FatJet_pt_jesRelativeSampleUp[jet]
+                    mass = mass + 2.*self.T.FatJet_mass_jesRelativeSampleUp[jet]
+                    sdm = sdm + 2.*self.T.FatJet_msoftdrop_jesRelativeSampleUp[jet]
+                    scale += 2.
+                    pt = pt + 2.*self.T.FatJet_pt_jesRelativeStatECUp[jet]
+                    mass = mass + 2.*self.T.FatJet_mass_jesRelativeStatECUp[jet]
+                    sdm = sdm + 2.*self.T.FatJet_msoftdrop_jesRelativeStatECUp[jet]
+                    scale += 2.
+                    pt = pt + 2.*self.T.FatJet_pt_jesRelativeStatFSRUp[jet]
+                    mass = mass + 2.*self.T.FatJet_mass_jesRelativeStatFSRUp[jet]
+                    sdm = sdm + 2.*self.T.FatJet_msoftdrop_jesRelativeStatFSRUp[jet]
+                    scale += 2.
+                    pt = pt + 2.*self.T.FatJet_pt_jesRelativeStatHFUp[jet]
+                    mass = mass + 2.*self.T.FatJet_mass_jesRelativeStatHFUp[jet]
+                    sdm = sdm + 2.*self.T.FatJet_msoftdrop_jesRelativeStatHFUp[jet]
+                    scale += 2.
+                    pt = pt + 2.*self.T.FatJet_pt_jesTimePtEtaUp[jet]
+                    mass = mass + 2.*self.T.FatJet_mass_jesTimePtEtaUp[jet]
+                    sdm = sdm + 2.*self.T.FatJet_msoftdrop_jesTimePtEtaUp[jet]
+                    scale += 2.
+            else:
+                if corr == "C":
+                    pt = pt + 2.*self.T.FatJet_pt_jesAbsoluteMPFBiasDown[jet]
+                    mass = mass + 2.*self.T.FatJet_mass_jesAbsoluteMPFBiasDown[jet]
+                    sdm = sdm + 2.*self.T.FatJet_msoftdrop_jesAbsoluteMPFBiasDown[jet]
+                    scale += 2.
+                    pt = pt + 2.*self.T.FatJet_pt_jesAbsoluteScaleDown[jet]
+                    mass = mass + 2.*self.T.FatJet_mass_jesAbsoluteScaleDown[jet]
+                    sdm = sdm + 2.*self.T.FatJet_msoftdrop_jesAbsoluteScaleDown[jet]
+                    scale += 2.
+                    pt = pt + 2.*self.T.FatJet_pt_jesFlavorQCDDown[jet]
+                    mass = mass + 2.*self.T.FatJet_mass_jesFlavorQCDDown[jet]
+                    sdm = sdm + 2.*self.T.FatJet_msoftdrop_jesFlavorQCDDown[jet]
+                    scale += 2.
+                    pt = pt + 2.*self.T.FatJet_pt_jesFragmentationDown[jet]
+                    mass = mass + 2.*self.T.FatJet_mass_jesFragmentationDown[jet]
+                    sdm = sdm + 2.*self.T.FatJet_msoftdrop_jesFragmentationDown[jet]
+                    scale += 2.
+                    pt = pt + self.T.FatJet_pt_jesPileUpDataMCDown[jet]
+                    mass = mass + self.T.FatJet_mass_jesPileUpDataMCDown[jet]
+                    sdm = sdm + self.T.FatJet_msoftdrop_jesPileUpDataMCDown[jet]
+                    scale += 1.
+                    pt = pt + self.T.FatJet_pt_jesPileUpPtBBDown[jet]
+                    mass = mass + self.T.FatJet_mass_jesPileUpPtBBDown[jet]
+                    sdm = sdm + self.T.FatJet_msoftdrop_jesPileUpPtBBDown[jet]
+                    scale += 1.
+                    pt = pt + self.T.FatJet_pt_jesPileUpPtEC1Down[jet]
+                    mass = mass + self.T.FatJet_mass_jesPileUpPtEC1Down[jet]
+                    sdm = sdm + self.T.FatJet_msoftdrop_jesPileUpPtEC1Down[jet]
+                    scale += 1.
+                    pt = pt + self.T.FatJet_pt_jesPileUpPtEC2Down[jet]
+                    mass = mass + self.T.FatJet_mass_jesPileUpPtEC2Down[jet]
+                    sdm = sdm + self.T.FatJet_msoftdrop_jesPileUpPtEC2Down[jet]
+                    scale += 1.
+                    pt = pt + self.T.FatJet_pt_jesPileUpPtHFDown[jet]
+                    mass = mass + self.T.FatJet_mass_jesPileUpPtHFDown[jet]
+                    sdm = sdm + self.T.FatJet_msoftdrop_jesPileUpPtHFDown[jet]
+                    scale += 1.
+                    pt = pt + self.T.FatJet_pt_jesPileUpPtRefDown[jet]
+                    mass = mass + self.T.FatJet_mass_jesPileUpPtRefDown[jet]
+                    sdm = sdm + self.T.FatJet_msoftdrop_jesPileUpPtRefDown[jet]
+                    scale += 1.
+                    pt = pt + self.T.FatJet_pt_jesRelativeFSRDown[jet]
+                    mass = mass + self.T.FatJet_mass_jesRelativeFSRDown[jet]
+                    sdm = sdm + self.T.FatJet_msoftdrop_jesRelativeFSRDown[jet]
+                    scale += 1.
+                    pt = pt + self.T.FatJet_pt_jesRelativeJERHFDown[jet]
+                    mass = mass + self.T.FatJet_mass_jesRelativeJERHFDown[jet]
+                    sdm = sdm + self.T.FatJet_msoftdrop_jesRelativeJERHFDown[jet]
+                    scale += 1.
+                    pt = pt + self.T.FatJet_pt_jesRelativePtBBDown[jet]
+                    mass = mass + self.T.FatJet_mass_jesRelativePtBBDown[jet]
+                    sdm = sdm + self.T.FatJet_msoftdrop_jesRelativePtBBDown[jet]
+                    scale += 1.
+                    pt = pt + self.T.FatJet_pt_jesRelativePtHFDown[jet]
+                    mass = mass + self.T.FatJet_mass_jesRelativePtHFDown[jet]
+                    sdm = sdm + self.T.FatJet_msoftdrop_jesRelativePtHFDown[jet]
+                    scale += 1.
+                    pt = pt + self.T.FatJet_pt_jesRelativeBalDown[jet]
+                    mass = mass + self.T.FatJet_mass_jesRelativeBalDown[jet]
+                    sdm = sdm + self.T.FatJet_msoftdrop_jesRelativeBalDown[jet]
+                    scale += 1.
+                    pt = pt + 2.*self.T.FatJet_pt_jesSinglePionECALDown[jet]
+                    mass = mass + 2.*self.T.FatJet_mass_jesSinglePionECALDown[jet]
+                    sdm = sdm + 2.*self.T.FatJet_msoftdrop_jesSinglePionECALDown[jet]
+                    scale += 2.
+                    pt = pt + 2.*self.T.FatJet_pt_jesSinglePionHCALDown[jet]
+                    mass = mass + 2.*self.T.FatJet_mass_jesSinglePionHCALDown[jet]
+                    sdm = sdm + 2.*self.T.FatJet_msoftdrop_jesSinglePionHCALDown[jet]
+                    scale += 2.
+                else:
+                    pt = pt + 2.*self.T.FatJet_pt_jesAbsoluteStatDown[jet]
+                    mass = mass + 2.*self.T.FatJet_mass_jesAbsoluteStatDown[jet]
+                    sdm = sdm + 2.*self.T.FatJet_msoftdrop_jesAbsoluteStatDown[jet]
+                    scale += 2.
+                    pt = pt + self.T.FatJet_pt_jesPileUpDataMCDown[jet]
+                    mass = mass + self.T.FatJet_mass_jesPileUpDataMCDown[jet]
+                    sdm = sdm + self.T.FatJet_msoftdrop_jesPileUpDataMCDown[jet]
+                    scale += 1.
+                    pt = pt + self.T.FatJet_pt_jesPileUpPtBBDown[jet]
+                    mass = mass + self.T.FatJet_mass_jesPileUpPtBBDown[jet]
+                    sdm = sdm + self.T.FatJet_msoftdrop_jesPileUpPtBBDown[jet]
+                    scale += 1.
+                    pt = pt + self.T.FatJet_pt_jesPileUpPtEC1Down[jet]
+                    mass = mass + self.T.FatJet_mass_jesPileUpPtEC1Down[jet]
+                    sdm = sdm + self.T.FatJet_msoftdrop_jesPileUpPtEC1Down[jet]
+                    scale += 1.
+                    pt = pt + self.T.FatJet_pt_jesPileUpPtEC2Down[jet]
+                    mass = mass + self.T.FatJet_mass_jesPileUpPtEC2Down[jet]
+                    sdm = sdm + self.T.FatJet_msoftdrop_jesPileUpPtEC2Down[jet]
+                    scale += 1.
+                    pt = pt + self.T.FatJet_pt_jesPileUpPtHFDown[jet]
+                    mass = mass + self.T.FatJet_mass_jesPileUpPtHFDown[jet]
+                    sdm = sdm + self.T.FatJet_msoftdrop_jesPileUpPtHFDown[jet]
+                    scale += 1.
+                    pt = pt + self.T.FatJet_pt_jesPileUpPtRefDown[jet]
+                    mass = mass + self.T.FatJet_mass_jesPileUpPtRefDown[jet]
+                    sdm = sdm + self.T.FatJet_msoftdrop_jesPileUpPtRefDown[jet]
+                    scale += 1.
+                    pt = pt + self.T.FatJet_pt_jesRelativeFSRDown[jet]
+                    mass = mass + self.T.FatJet_mass_jesRelativeFSRDown[jet]
+                    sdm = sdm + self.T.FatJet_msoftdrop_jesRelativeFSRDown[jet]
+                    scale += 1.
+                    pt = pt + 2.*self.T.FatJet_pt_jesRelativeJEREC1Down[jet]
+                    mass = mass + 2.*self.T.FatJet_mass_jesRelativeJEREC1Down[jet]
+                    sdm = sdm + 2.*self.T.FatJet_msoftdrop_jesRelativeJEREC1Down[jet]
+                    scale += 2.
+                    pt = pt + 2.*self.T.FatJet_pt_jesRelativeJEREC2Down[jet]
+                    mass = mass + 2.*self.T.FatJet_mass_jesRelativeJEREC2Down[jet]
+                    sdm = sdm + 2.*self.T.FatJet_msoftdrop_jesRelativeJEREC2Down[jet]
+                    scale += 2.
+                    pt = pt + self.T.FatJet_pt_jesRelativeJERHFDown[jet]
+                    mass = mass + self.T.FatJet_mass_jesRelativeJERHFDown[jet]
+                    sdm = sdm + self.T.FatJet_msoftdrop_jesRelativeJERHFDown[jet]
+                    scale += 1.
+                    pt = pt + self.T.FatJet_pt_jesRelativePtBBDown[jet]
+                    mass = mass + self.T.FatJet_mass_jesRelativePtBBDown[jet]
+                    sdm = sdm + self.T.FatJet_msoftdrop_jesRelativePtBBDown[jet]
+                    scale += 1.
+                    pt = pt + 2.*self.T.FatJet_pt_jesRelativePtEC1Down[jet]
+                    mass = mass + 2.*self.T.FatJet_mass_jesRelativePtEC1Down[jet]
+                    sdm = sdm + 2.*self.T.FatJet_msoftdrop_jesRelativePtEC1Down[jet]
+                    scale += 2.
+                    pt = pt + 2.*self.T.FatJet_pt_jesRelativePtEC2Down[jet]
+                    mass = mass + 2.*self.T.FatJet_mass_jesRelativePtEC2Down[jet]
+                    sdm = sdm + 2.*self.T.FatJet_msoftdrop_jesRelativePtEC2Down[jet]
+                    scale += 2.
+                    pt = pt + self.T.FatJet_pt_jesRelativePtHFDown[jet]
+                    mass = mass + self.T.FatJet_mass_jesRelativePtHFDown[jet]
+                    sdm = sdm + self.T.FatJet_msoftdrop_jesRelativePtHFDown[jet]
+                    scale += 1.
+                    pt = pt + self.T.FatJet_pt_jesRelativeBalDown[jet]
+                    mass = mass + self.T.FatJet_mass_jesRelativeBalDown[jet]
+                    sdm = sdm + self.T.FatJet_msoftdrop_jesRelativeBalDown[jet]
+                    scale += 1.
+                    pt = pt + 2.*self.T.FatJet_pt_jesRelativeSampleDown[jet]
+                    mass = mass + 2.*self.T.FatJet_mass_jesRelativeSampleDown[jet]
+                    sdm = sdm + 2.*self.T.FatJet_msoftdrop_jesRelativeSampleDown[jet]
+                    scale += 2.
+                    pt = pt + 2.*self.T.FatJet_pt_jesRelativeStatECDown[jet]
+                    mass = mass + 2.*self.T.FatJet_mass_jesRelativeStatECDown[jet]
+                    sdm = sdm + 2.*self.T.FatJet_msoftdrop_jesRelativeStatECDown[jet]
+                    scale += 2.
+                    pt = pt + 2.*self.T.FatJet_pt_jesRelativeStatFSRDown[jet]
+                    mass = mass + 2.*self.T.FatJet_mass_jesRelativeStatFSRDown[jet]
+                    sdm = sdm + 2.*self.T.FatJet_msoftdrop_jesRelativeStatFSRDown[jet]
+                    scale += 2.
+                    pt = pt + 2.*self.T.FatJet_pt_jesRelativeStatHFDown[jet]
+                    mass = mass + 2.*self.T.FatJet_mass_jesRelativeStatHFDown[jet]
+                    sdm = sdm + 2.*self.T.FatJet_msoftdrop_jesRelativeStatHFDown[jet]
+                    scale += 2.
+                    pt = pt + 2.*self.T.FatJet_pt_jesTimePtEtaDown[jet]
+                    mass = mass + 2.*self.T.FatJet_mass_jesTimePtEtaDown[jet]
+                    sdm = sdm + 2.*self.T.FatJet_msoftdrop_jesTimePtEtaDown[jet]
+                    scale += 2.
+            PT.append(pt/scale)
+            MASS.append(mass/scale)
+            SDM.append(sdm/scale)
+        return [PT, MASS, SDM]
 
     def FillJetVars(self, PT, MASS, SDMASS, B):
         self.J1.SetPtEtaPhiM(PT[0], self.T.FatJet_eta[0], self.T.FatJet_phi[0], MASS[0])
@@ -169,8 +502,10 @@ class picoTree:
     def AddBranch(self, name, obj):
         self.T_nominal.Branch(name, obj, name+"/F")
         if self.mc:
-            self.T_jes_up.Branch(name, obj, name+"/F")
-            self.T_jes_down.Branch(name, obj, name+"/F")
+            self.T_jesCorr_up.Branch(name, obj, name+"/F")
+            self.T_jesCorr_down.Branch(name, obj, name+"/F")
+            self.T_jesUnCorr_up.Branch(name, obj, name+"/F")
+            self.T_jesUnCorr_down.Branch(name, obj, name+"/F")
             self.T_jer_up.Branch(name, obj, name+"/F")
             self.T_jer_down.Branch(name, obj, name+"/F")
             self.T_jms_up.Branch(name, obj, name+"/F")

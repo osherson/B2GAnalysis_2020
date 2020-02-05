@@ -21,7 +21,7 @@ def preprocess(Inputs, OutputFolder, Year, Run, Triggers):
     JSON = None
     useModules = [PrefCorr()]
     if Run == "MC":
-        jmeCorrectionsAK8 = createJMECorrector(True, Year, Run, "Total", True, "AK8PFPuppi")
+        jmeCorrectionsAK8 = createJMECorrector(True, Year, Run, "All", True, "AK8PFPuppi")
         useModules.append(jmeCorrectionsAK8())
         if Year == "2016":
             useModules.append(puWeight_2016())
