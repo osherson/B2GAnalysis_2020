@@ -160,7 +160,6 @@ class picoTree:
             sdm = 0.
             if which == "up":
                 if corr == "C":
-                    print self.T.FatJet_pt_jesAbsoluteMPFBiasUp[jet]
                     pt = pt + 2.*self.T.FatJet_pt_jesAbsoluteMPFBiasUp[jet]
                     mass = mass + 2.*self.T.FatJet_mass_jesAbsoluteMPFBiasUp[jet]
                     sdm = sdm + 2.*self.T.FatJet_msoftdrop_jesAbsoluteMPFBiasUp[jet]
