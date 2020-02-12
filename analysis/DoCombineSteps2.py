@@ -10,14 +10,14 @@ if not Blind:
 			if not VAR[3]: continue
 			cardname = VAR[0]+"_"+Sigs[3]
 			######################## Goodness of Fit test:
-			os.system("combine ../results/"+NAME+"/Card_"+cardname+".txt -M GoodnessOfFit --algo=saturated")
+			os.system("combine ../results/"+NAME+"/Card_"+cardname+".txt -M GoodnessOfFit --algo=saturated --fixedSignalStrength 0 ")
 			KS_Fs = ROOT.TFile("higgsCombineTest.GoodnessOfFit.mH120.root")
 			KS_Ts = KS_Fs.Get("limit")
 			KS_Vs = []
 			for i in range(0,KS_Ts.GetEntries()):
 				KS_Ts.GetEntry(i)
 				KS_Vs.append(KS_Ts.limit)
-			os.system("combine ../results/"+NAME+"/Card_"+cardname+".txt -M GoodnessOfFit --algo=saturated -t "+str(NTOYS))
+			os.system("combine ../results/"+NAME+"/Card_"+cardname+".txt -M GoodnessOfFit --algo=saturated --fixedSignalStrength 0 -t "+str(NTOYS))
 			KS_F = ROOT.TFile("higgsCombineTest.GoodnessOfFit.mH120.123456.root")	
 			KS_T = KS_F.Get("limit")
 			KS_V = []
