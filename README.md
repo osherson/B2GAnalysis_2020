@@ -12,7 +12,7 @@ cmsenv
 
 scram b -j8
 
-git clone https://github.com/osherson/ABCD_multivar.git
+git clone https://github.com/osherson/B2GAnalysis_2020.git
 
 mkdir results
 
