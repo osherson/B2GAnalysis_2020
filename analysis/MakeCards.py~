@@ -120,8 +120,8 @@ for Sigs in SIG:
 			shapes.append(Unroll(SR_Bd, "SR"+NAME+"_qcdsr"+NAME+"_SRP"+str(i)+"Down"))
 			shapes.append(Unroll(CR_Bd, "CR"+NAME+"_qcdcr"+NAME+"_CRP"+str(i)+"Down"))
 		
-		SR_S = outF.Get("SRrA_"+Sigs[3]+"_"+name)
-		CR_S = outF.Get("CRrA_"+Sigs[3]+"_"+name)
+		SR_S = outF.Get("SRrA_"+Sigs[3]+name)
+		CR_S = outF.Get("CRrA_"+Sigs[3]+name)
 		shapes.append(Unroll(SR_S, "SR"+NAME+"_Sig"))
 		shapes.append(Unroll(CR_S, "CR"+NAME+"_Sig"))
 		

@@ -4,7 +4,6 @@ import numpy
 import math
 import sys
 import array
-import os
 RDF = ROOT.ROOT.RDataFrame
 
 def MakeNBinsFromMinToMax(N,Min,Max): # helper for making large bin arrays makes N bins between Min and Max (same as you're feed to a TH1F)

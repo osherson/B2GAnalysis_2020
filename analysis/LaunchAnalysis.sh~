@@ -15,8 +15,6 @@ echo -e "${RED}> Building shape templates... ${NC}"
 python BuildShapes.py
 echo -e "${RED}> Building signal models... ${NC}"
 python ProcessSignals.py
-echo -e "${RED}> Building combine card... ${NC}"
-python MakeCards.py
 echo -e "${RED}> Cleaning up... ${NC}"
 python Cleanup.py
 end=`date +%s`

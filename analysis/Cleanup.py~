@@ -1,0 +1,4 @@
+import os
+import TEMPPAYLOAD as TMP
+os.system("convert results/"+TMP.NAME+"/*.png results/"+TMP.NAME+"/REPORT.pdf")
+os.system("rm TEMPPAYLOAD.py")

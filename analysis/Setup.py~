@@ -1,0 +1,11 @@
+import os
+import TEMPPAYLOAD as TMP 
+try: # create or recreate the output folder in "results"
+    os.stat("results/"+TMP.NAME)
+    os.system("rm -rf results/"+TMP.NAME)
+    os.mkdir("results/"+TMP.NAME) 
+except:
+    os.mkdir("results/"+TMP.NAME)       
+F = ROOT.TFile("results/"+TMP.NAME+"/Debubg_"+TMP.NAME+".root", "recreate") # Master plots file which can be used to debug and serves as storage for ROOT objects sbetween between scripts
+F.Save()
+F.Write()
