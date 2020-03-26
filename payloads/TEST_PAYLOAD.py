@@ -9,7 +9,7 @@ ROOT.gROOT.SetBatch(ROOT.kTRUE)
 ###			SOME SETUP			###
 ###################################
 # Name this payload (this is the name that will be used for all files)
-NAME = "TEST"
+NAME= "MC16"
 # Luminosity (in fb):
 LUMI = 35.9
 LUMIUNC = 1.025
@@ -23,11 +23,11 @@ Blind = False
 ###################################
 # The sum of these files will be used as the "data":
 DATA_FILES = 	[
-				"/home/rek81/userArea/TreeMaker_Jan31/CMSSW_10_6_2/src/ABCD_multivar/treemaker/treemaker_trial2/2017_QCDHT_test.root", "/home/rek81/userArea/TreeMaker_Jan31/CMSSW_10_6_2/src/ABCD_multivar/treemaker/treemaker_trial2/2017_ttbar_test.root"
+				"/cms/xaastorage/PicoTrees/JAN6_2020/2016/QCD_HT/2016_HTQCD.root", "/cms/xaastorage/PicoTrees/JAN6_2020/2016/TTBAR/ttbar.root"
 				]
 # The sum of these files will be used as the ttbar:
 TTBAR_FILES = 	[
-				"/home/rek81/userArea/TreeMaker_Jan31/CMSSW_10_6_2/src/ABCD_multivar/treemaker/treemaker_trial2/2017_ttbar_test.root"
+				"/cms/xaastorage/PicoTrees/JAN6_2020/2016/TTBAR/ttbar.root"
 				]
 ###################################
 ###			SIGNAL INPUTS		###
@@ -36,7 +36,7 @@ TTBAR_FILES = 	[
 # The format for including these is ([FILE], WEIGHT, TREE, NAME, TITLE, XS),
 # where TREE is the name of the TTree, the NAME is an internal convention for the code and the TITLE is what will be plotted in legends
 SIG = [
-		[["/home/rek81/userArea/TreeMaker_Jan31/CMSSW_10_6_2/src/ABCD_multivar/2016_Treemaker/treemaker_test1/2016_X1500a50.root"],
+		[["/cms/xaastorage/PicoTrees/JAN6_2020/2016/XaaSig/X1500a50.root"],
 			"10.0*36.9*weight_xsN*weight_PU",
 			"tree_nominal",
 			"X1000a50",
@@ -48,7 +48,7 @@ SIG = [
 # The format for SysWeighted is [name of this systematic (has to be on word, no _/-/spaces so it can be used in a combine card), weight FACTOR Up, weight FACTOR down]
 # FACTOR here is what to CHANGE the original weight by (this way we don't forget to change things in multiple places).
 # Give it a name you want to see in a legend (name for the systematic), and finally, True/False this should apply to ttbar as well?
-SysWeighted = 	[["PU", "weight_PU_up/weight_PU", "weight_PU_dn/weight_PU", "Pileup Uncertainty", True]]
+SysWeighted = 	[]#["PU", "weight_PU_up/weight_PU", "weight_PU_dn/weight_PU", "Pileup Uncertainty", True]]
 # Systematics kept in separate trees are done in the SysComputed, which has exactly the same format, except now you tell it what the up/down trees are for
 # that systematic
 SysComputed = 	[["JER", "tree_jer_up", "tree_jer_down", "Jet Energy Resolution Uncertainty", True],
@@ -65,13 +65,10 @@ FitVar = ("J2SDM", FitVarBins, "Subleading Jet Soft Drop Mass (GeV)")
 ###################################
 # 2D Vars: These combinations will be processed as unrolled histograms.
 # Format as "varname, bins, title, othervarname, otherbins, othertitle"
-# The last bool is whether or not to create a combine card from this variable!
-#X2DVarBins = MakeNBinsFromMinToMax(15,800.,2300.)
 jmBins = MakeNBinsFromMinToMax(15,15.,265.)
 XBins = [800.,900.,1000.,1100.,1200.,1300.,1400.,1500.,1750.,2000.,2500.,4000.]
-
 EstVars = [
-				["evt_XM", XBins, "Dijet Mass (GeV)", "evt_aM", jmBins, "Average Jet Mass (GeV)", True]
+				["evt_XM", XBins, "Dijet Mass (GeV)", "evt_aM", jmBins, "Average Jet Mass (GeV)"]
 			]
 ###################################
 ###		REGIONS AND CUTS		###
@@ -79,7 +76,7 @@ EstVars = [
 #Preselection (will be applied to ALL plots produced by this code)
 PRESELECTION = "J1dbtag>0.6 && evt_HT>900 && J2pt>300"
 SR = "evt_Masym>0.0 && evt_Masym<0.1" # Specify the signal region.
-CR = "evt_Masym>0.2 && evt_Masym<0.3" # Specify the ttbar control region
+CR = "evt_Masym>0.1 && evt_Masym<0.25" # Specify the ttbar control region
 # What variable do we use to separate region A and C from B and D?
 VAR_ACvBD = ("J2dbtag", MakeNBinsFromMinToMax(20, -1.,1.), "Subleading Jet Double-B Score") # Same format as the FitVar
 # What cut do you apply to it (define the passing and failing requirement))?
@@ -122,7 +119,7 @@ MC_WEIGHT = str(1000 * LUMI) + "*weight_xsN*weight_PU"
 
 MC_WEIGHT_NOM = MC_WEIGHT +"*exp(evt_ttRW*-0.0005)"
 MC_WEIGHT_AU = MC_WEIGHT
-MC_WEIGHT_AD = MC_WEIGHT +"*(2*exp(evt_ttRW*-0.0005))"
+MC_WEIGHT_AD = MC_WEIGHT +"*(exp(evt_ttRW*-0.001))"
 MC_WEIGHT_NU = MC_WEIGHT +"*1.2*exp(evt_ttRW*-0.0005)"
 MC_WEIGHT_ND = MC_WEIGHT +"*0.8*exp(evt_ttRW*-0.0005)"
 

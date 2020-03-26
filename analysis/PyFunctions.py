@@ -12,6 +12,20 @@ def MakeNBinsFromMinToMax(N,Min,Max): # helper for making large bin arrays makes
 	for i in range(N+1):
 		BINS.append(Min+(i*(Max-Min)/N))
 	return BINS
+def convertAsymGraph(TG, template, name):
+	Hist = template.Clone(name)
+	for i in range(1,Hist.GetNbinsX()+1):
+		Hist.SetBinContent(i,0.)
+	for i in range(TG.GetN()):
+		Hist.SetBinContent(i+1,TG.GetY()[i]*(TG.GetErrorXlow(i)+TG.GetErrorXhigh(i)))
+		Hist.SetBinError(i+1, TG.GetErrorY(i))
+	return Hist
+def convertBinNHist(H, template, name):
+	Hist = template.Clone(name)
+	for i in range(1,Hist.GetNbinsX()+1):
+		Hist.SetBinContent(i,H.GetBinContent(i))
+		Hist.SetBinError(i,H.GetBinError(i))
+	return Hist
 def GoodPlotFormat(H, *args): # Handy little script for color/line/fill/point/etc...
 	try: H.SetStats(0)
 	except: print " ------------ [  No stats box found!  ]"
@@ -93,3 +107,35 @@ def Unroll(H, name):
 			oH.SetBinError(index, H.GetBinError(k))
 
 	return oH
+def Reroll(H, VARS):
+	X = TH1F("x_"+H.GetName(), ";"+VARS[2], len(VARS[1])-1, numpy.array(VARS[1]))
+	Y = TH1F("y_"+H.GetName(), ";"+VARS[5], len(VARS[4])-1, numpy.array(VARS[4]))
+		
+	XY = TH2F("xy_"+H.GetName(), ";"+VARS[2]+";"+VARS[5], len(VARS[1])-1, numpy.array(VARS[1]), len(VARS[4])-1, numpy.array(VARS[4]))
+	XYe = TH2F("xye_"+H.GetName(), ";"+VARS[2]+";"+VARS[5], len(VARS[1])-1, numpy.array(VARS[1]), len(VARS[4])-1, numpy.array(VARS[4]))
+
+	X.SetStats(0)
+	Y.SetStats(0)
+	XY.SetStats(0)
+
+	nxb = X.GetNbinsX()
+	nyb = Y.GetNbinsX()
+
+	for i in range(0,(nxb)):
+		for j in range(0,(nyb)):
+			k = XY.GetBin(i+1,j+1)
+			index = H.FindBin(1 + j + i*nyb)
+			XY.SetBinContent(k, H.GetBinContent(index))
+			XY.SetBinError(k, (H.GetBinError(index)))
+			XYe.SetBinContent(k, (H.GetBinError(index)))
+	X = XY.ProjectionX("px_"+H.GetName(),1,nxb,"e")
+	Y = XY.ProjectionY("py_"+H.GetName(),1,nyb,"e")
+	return [X,Y,XY, XYe]
+def DBBW(H):
+	for i in range(1,H.GetNbinsX()+1):
+		C = H.GetBinContent(i)
+		E = H.GetBinError(i)
+		W = H.GetBinWidth(i)
+		H.SetBinContent(i, C/W)
+		H.SetBinError(i, E/W)	
+	return H

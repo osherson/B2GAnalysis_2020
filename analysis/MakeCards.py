@@ -136,20 +136,20 @@ for Sigs in SIG:
 			SuSysD = outF.Get("SRrA_"+Sigs[3]+"_"+sys[0]+"D_"+VAR[0]+"_"+VAR[3])
 			CuSysU = outF.Get("CRrA_"+Sigs[3]+"_"+sys[0]+"U_"+VAR[0]+"_"+VAR[3])
 			CuSysD = outF.Get("CRrA_"+Sigs[3]+"_"+sys[0]+"D_"+VAR[0]+"_"+VAR[3])
-			shapes.append(Unroll(SR_Bu, "SR"+NAME+"_Sig_"+sys[0]+"Up"))
-			shapes.append(Unroll(SR_Bu, "SR"+NAME+"_Sig_"+sys[0]+"Down"))
-			shapes.append(Unroll(CR_Bu, "CR"+NAME+"_Sig_"+sys[0]+"Up"))
-			shapes.append(Unroll(CR_Bu, "CR"+NAME+"_Sig_"+sys[0]+"Down"))
+			shapes.append(Unroll(SuSysU, "SR"+NAME+"_Sig_"+sys[0]+"Up"))
+			shapes.append(Unroll(SuSysD, "SR"+NAME+"_Sig_"+sys[0]+"Down"))
+			shapes.append(Unroll(CuSysU, "CR"+NAME+"_Sig_"+sys[0]+"Up"))
+			shapes.append(Unroll(CuSysD, "CR"+NAME+"_Sig_"+sys[0]+"Down"))
 			
 		for sys in SysComputed:
 			SuSysU = outF.Get("SRrA_"+Sigs[3]+"_"+sys[0]+"U_"+VAR[0]+"_"+VAR[3])
 			SuSysD = outF.Get("SRrA_"+Sigs[3]+"_"+sys[0]+"D_"+VAR[0]+"_"+VAR[3])
 			CuSysU = outF.Get("CRrA_"+Sigs[3]+"_"+sys[0]+"U_"+VAR[0]+"_"+VAR[3])
 			CuSysD = outF.Get("CRrA_"+Sigs[3]+"_"+sys[0]+"D_"+VAR[0]+"_"+VAR[3])
-			shapes.append(Unroll(SR_Bu, "SR"+NAME+"_Sig_"+sys[0]+"Up"))
-			shapes.append(Unroll(SR_Bu, "SR"+NAME+"_Sig_"+sys[0]+"Down"))
-			shapes.append(Unroll(CR_Bu, "CR"+NAME+"_Sig_"+sys[0]+"Up"))
-			shapes.append(Unroll(CR_Bu, "CR"+NAME+"_Sig_"+sys[0]+"Down"))
+			shapes.append(Unroll(SuSysU, "SR"+NAME+"_Sig_"+sys[0]+"Up"))
+			shapes.append(Unroll(SuSysD, "SR"+NAME+"_Sig_"+sys[0]+"Down"))
+			shapes.append(Unroll(CuSysU, "CR"+NAME+"_Sig_"+sys[0]+"Up"))
+			shapes.append(Unroll(CuSysD, "CR"+NAME+"_Sig_"+sys[0]+"Down"))
 
 		
 		ShapesF = ROOT.TFile("SHAPES_"+Sigs[3]+name+".root", "recreate")
