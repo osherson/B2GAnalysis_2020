@@ -45,3 +45,11 @@ The code can be launched in the "analysis" folder by doing.
 ./LaunchAnalysis.sh [path-to-payload]
 
 - Marc
+
+
+
+# TO DO:
+
+- Implement all uncertainties in the sys sections of the payload.
+- For above: include ttbar shapes and modify card to ties these together
+- Write signal zoomer (input window in payload around signal)
