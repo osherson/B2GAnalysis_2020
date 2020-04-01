@@ -27,11 +27,11 @@ source MakePico.sh [output] [inputPath] [goBetween] [year] [Run/MC] [TriggerList
 - year: dataset year
 - Run/MC: if this is data, the run period, if this is MC, just write "MC"
 - TriggerList: text file containing the names of the triggers you want to keep
-- weight: 1 for data, cross-section for MC
+- weight: 1 for data, cross-section / Nevents for MC
 
 Example (MC):
 
-source MakeNano.sh X1000a50 /cms/xaastorage/NanoAOD/2016/JUNE19/Xaa_Signal/X1000a50/ /cms/osherson/NanoToolOutput 2016 MC triglist.txt 9.8
+source MakeNano.sh X1000a50 /cms/xaastorage/NanoAOD/2016/JUNE19/Xaa_Signal/X1000a50/ /cms/osherson/NanoToolOutput 2016 MC triglist.txt 0.0002
 
 Example (Data, just running on one file):
 
@@ -45,3 +45,11 @@ The code can be launched in the "analysis" folder by doing.
 ./LaunchAnalysis.sh [path-to-payload]
 
 - Marc
+
+
+
+# TO DO:
+
+- Implement all uncertainties in the sys sections of the payload.
+- For above: include ttbar shapes and modify card to ties these together
+- Write signal zoomer (input window in payload around signal)
