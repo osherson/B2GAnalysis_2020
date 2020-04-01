@@ -4,6 +4,7 @@ import ROOT
 from ROOT import *
 from array import array
 import math
+import numpy
 from math import *
 import sys
 import glob
@@ -41,22 +42,26 @@ class picoTree:
             self.T_jmr_up = TTree("tree_jmr_up", "tree_jmr_up")
             self.T_jmr_down = TTree("tree_jmr_down", "tree_jmr_down")
             # MC ONLY VARIABLES
-            self.W = array('f', [1.0])
+            self.W = array('f', [0.0])
             self.AddBranch('weight_xsN', self.W)
-            self.Wpu = array('f', [1.0])
+            self.Wpu = array('f', [0.0])
             self.AddBranch('weight_PU', self.Wpu)
-            self.Wpuu = array('f', [1.0])
+            self.Wpuu = array('f', [0.0])
             self.AddBranch('weight_PU_up', self.Wpuu)
-            self.Wpud = array('f', [1.0])
+            self.Wpud = array('f', [0.0])
             self.AddBranch('weight_PU_dn', self.Wpud)
-            self.WT = array('f', [-1.0])
+            self.WT = array('f', [0.0])
             self.AddBranch('weight_trig', self.WT)
-            self.WTup = array('f', [-1.0])
+            self.WTup = array('f', [0.0])
             self.AddBranch('weight_trig_up', self.WTup)
-            self.WTdn = array('f', [-1.0])
+            self.WTdn = array('f', [0.0])
             self.AddBranch('weight_trig_dn', self.WTdn)
-            self.evt_ttRW = array('f', [-1.0])
+            self.evt_ttRW = array('f', [0.0])
             self.AddBranch('evt_ttRW', self.evt_ttRW)
+            self.PDFup = array('f', [0.0])
+            self.AddBranch('weight_pdf_up', self.PDFup)
+            self.PDFdn = array('f', [0.0])
+            self.AddBranch('weight_pdf_dn', self.PDFdn)
         # EVENT VARIABLES
         self.evt_XM = array('f', [-1.0])
         self.AddBranch('evt_XM', self.evt_XM)
@@ -134,6 +139,8 @@ class picoTree:
                 self.WT[0] = self.TrigHist.GetBinContent(self.TrigHist.FindBin(self.HT))
                 self.WTup[0] = min(1.0, self.TrigHist.GetBinContent(self.TrigHist.FindBin(self.HT)) + self.TrigHist.GetBinError(self.TrigHist.FindBin(self.HT)))
                 self.WTdn[0] = max(0.0, self.TrigHist.GetBinContent(self.TrigHist.FindBin(self.HT)) - self.TrigHist.GetBinError(self.TrigHist.FindBin(self.HT)))
+                self.PDFup[0] = 1 + numpy.std(self.T.LHEPdfWeight)
+                self.PDFdn[0] = 1 - numpy.std(self.T.LHEPdfWeight)
                 Kin_jesCorrUp = self.GetJESComp("C", "up")
                 Kin_jesCorrDown = self.GetJESComp("C", "down")
                 Kin_jesUnCorrUp = self.GetJESComp("U", "up")

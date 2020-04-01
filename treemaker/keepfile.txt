@@ -7,6 +7,7 @@ keep GenPart_pdgId
 keep GenPart_status
 keep GenPart_pt
 keep pu*
+keep *Pdf*
 drop FatJet_deepTag_*
 drop *raw
 drop FatJet_area
