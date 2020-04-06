@@ -31,7 +31,7 @@ for Sigs in SIG:
 		for i in range(0,KS_Ts.GetEntries()):
 			KS_Ts.GetEntry(i)
 			KS_Vs.append(KS_Ts.limit)
-		os.system("combine -M GoodnessOfFit -d "+Sigs[3]+name+"FitWorkspace.root --snapshotName "+Sigs[3]+name+"BOFit --algo=saturated -t 100")
+		os.system("combine -M GoodnessOfFit -d "+Sigs[3]+name+"FitWorkspace.root --snapshotName "+Sigs[3]+name+"BOFit --algo=saturated -t 600")
 		KS_F = ROOT.TFile("higgsCombineTest.GoodnessOfFit.mH120.123456.root")	
 		KS_T = KS_F.Get("limit")
 		KS_V = []
@@ -60,10 +60,10 @@ for Sigs in SIG:
 		C_KS.Print("results/"+NAME+"/GoF_"+Sigs[3]+name+".root")
 		C_KS.Print("results/"+NAME+"/GoF_"+Sigs[3]+name+".png")
 		
-		INJ = [0., 1., 2.]
+		INJ = [0., 1., 2., 5.]
 		for i in INJ:
-			os.system("combine -M GenerateOnly -d "+Sigs[3]+name+"FitWorkspace.root --snapshotName "+Sigs[3]+name+"BOFit -t 75 --saveToys --toysFrequentist  --expectSignal "+str(i*l[4])+" -n "+NAME+str(i)+" --bypassFrequentistFit")
-			os.system("combine -M FitDiagnostics -d "+Sigs[3]+name+"FitWorkspace.root --snapshotName "+Sigs[3]+name+"BOFit --bypassFrequentistFit --skipBOnlyFit -t 75 --toysFile higgsCombine"+NAME+str(i)+".GenerateOnly.mH120.123456.root --rMin -10 --rMax 10 --saveWorkspace -n "+NAME+str(i))
+			os.system("combine -M GenerateOnly -d "+Sigs[3]+name+"FitWorkspace.root --snapshotName "+Sigs[3]+name+"BOFit -t 600 --saveToys --toysFrequentist  --expectSignal "+str(i*l[4])+" -n "+NAME+str(i)+" --bypassFrequentistFit")
+			os.system("combine -M FitDiagnostics -d "+Sigs[3]+name+"FitWorkspace.root --snapshotName "+Sigs[3]+name+"BOFit --bypassFrequentistFit --skipBOnlyFit -t 600 --toysFile higgsCombine"+NAME+str(i)+".GenerateOnly.mH120.123456.root --rMin -10 --rMax 10 --saveWorkspace -n "+NAME+str(i))
 			F = ROOT.TFile("../analysis/fitDiagnostics"+NAME+str(i)+".root")
 			T = F.Get("tree_fit_sb")
 			H = ROOT.TH1F("Bias Test, injected r="+str(int(i)), ";(#mu_{measured} - #mu_{injected})/#sigma_{#mu};toys", 40, -5., 5.)

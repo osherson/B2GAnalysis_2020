@@ -107,7 +107,7 @@ def Unroll(H, name):
 			oH.SetBinError(index, H.GetBinError(k))
 
 	return oH
-def Reroll(H, VARS):
+def Reroll(H, VARS, ZOOM):
 	X = TH1F("x_"+H.GetName(), ";"+VARS[2], len(VARS[1])-1, numpy.array(VARS[1]))
 	Y = TH1F("y_"+H.GetName(), ";"+VARS[5], len(VARS[4])-1, numpy.array(VARS[4]))
 		
@@ -128,9 +128,15 @@ def Reroll(H, VARS):
 			XY.SetBinContent(k, H.GetBinContent(index))
 			XY.SetBinError(k, (H.GetBinError(index)))
 			XYe.SetBinContent(k, (H.GetBinError(index)))
+	zoom_xl = XY.GetYaxis().FindBin(ZOOM[1][0])
+	zoom_xh = XY.GetYaxis().FindBin(ZOOM[1][1])
+	zoom_yl = XY.GetXaxis().FindBin(ZOOM[0][0])
+	zoom_yh = XY.GetXaxis().FindBin(ZOOM[0][1])
 	X = XY.ProjectionX("px_"+H.GetName(),1,nxb,"e")
 	Y = XY.ProjectionY("py_"+H.GetName(),1,nyb,"e")
-	return [X,Y,XY, XYe]
+	zX = XY.ProjectionX("zpx_"+H.GetName(),zoom_xl,zoom_xh,"e")
+	zY = XY.ProjectionY("zpy_"+H.GetName(),zoom_yl,zoom_yh,"e")
+	return [X,Y,XY,XYe,zX,zY]
 def DBBW(H):
 	for i in range(1,H.GetNbinsX()+1):
 		C = H.GetBinContent(i)

@@ -4,7 +4,7 @@ kmax   *     number of nuisance parameters
 ---------------------------------------------------------------------------------------
 shapes * * SHAPES__name_.root $CHANNEL_$PROCESS $CHANNEL_$PROCESS_$SYSTEMATIC
 ---------------------------------------------------------------------------------------
-bin					SR_Y_				CR__Y_
+bin					SR_Y_				CR_Y_
 observation			_SRN_		_CRN_
 ---------------------------------------------------------------------------------------
 bin					SR_Y_		SR_Y_		SR_Y_		CR_Y_		CR_Y_		CR_Y_

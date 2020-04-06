@@ -17,9 +17,15 @@ for Sigs in SIG:
 				cDATA = convertAsymGraph(cDATA, cTT, "data"+R+P)
 				Hvec = []
 				for i in [cDATA, cTT, cTBKG, cSIG]:
-					Hvec.append(Reroll(convertBinNHist(i, refH, i.GetName()+"new"+P+R), VAR))
+					Hvec.append(Reroll(convertBinNHist(i, refH, i.GetName()+"new"+P+R), VAR, Sigs[5]))
 				
 				Pull2D = Hvec[0][2].Clone("pull"+R+P)
+				
+				Cd = ROOT.TCanvas()
+				Cd.cd()
+				Pull2D.Draw("colz")
+				Cd.Print("results/"+NAME+"/Data2D_"+P+"_"+R+".png")
+				
 				Pull2D.Add(Hvec[2][2], -1.)
 				Pull2D.Divide(Hvec[0][3])
 				Hvec[2][3].Divide(Hvec[0][3])
@@ -36,7 +42,9 @@ for Sigs in SIG:
 				Hvec[3][2].Draw("colz")
 				C2e.Print("results/"+NAME+"/Sig2D_"+P+"_"+R+".png")
 				
-				for W in [0, 1]:
+				for W in [0, 1, 4, 5]:
+					if W < 2:	savename = P+R+VAR[3*W]
+					else: savename = P+R+"zoom"+VAR[3*(W-4)]
 					data = DBBW(Hvec[0][W])
 					GoodPlotFormat(data, "markers", ROOT.kBlack, 20)
 					bkg = DBBW(Hvec[2][W])
@@ -134,5 +142,5 @@ for Sigs in SIG:
 					for e in EP: e.Draw("same")
 					pull.Draw("esame")
 					p22.RedrawAxis()
-					C.Print("results/"+NAME+"/"+P+R+VAR[3*W]+".root")
-					C.Print("results/"+NAME+"/"+P+R+VAR[3*W]+".png")
+					C.Print("results/"+NAME+"/"+savename+".root")
+					C.Print("results/"+NAME+"/"+savename+".png")
