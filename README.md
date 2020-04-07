@@ -14,8 +14,6 @@ scram b -j8
 
 git clone https://github.com/osherson/B2GAnalysis_2020.git
 
-mkdir results
-
 
 # Running (Treemaker):
 This code (in the treemaker folder) turns nanoAOD into useable picotrees.
