@@ -1,0 +1,11 @@
+universe = vanilla
+Requirements = (Arch == "X86_64")
++RUQueue = "cms"
++AccountingGroup = "group_rutgers.osherson"
+Executable = pico_EvasTest.sh
+should_transfer_files = NO
+Output = /cms/osherson/B2G/CMSSW_10_6_2/src/B2GAnalysis_2020/treemaker/pico_EvasTest_$(cluster)_$(process).stdout
+Error = /cms/osherson/B2G/CMSSW_10_6_2/src/B2GAnalysis_2020/treemaker/pico_EvasTest_$(cluster)_$(process).stderr
+Log = /cms/osherson/B2G/CMSSW_10_6_2/src/B2GAnalysis_2020/treemaker/pico_EvasTest_$(cluster)_$(process).condor
+Arguments = $(cluster) $(process)
+Queue 1

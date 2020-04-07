@@ -1,4 +1,4 @@
-cd /cms/universe = vanilla
+universe = vanilla
 Requirements = (Arch == "X86_64")
 +RUQueue = "cms"
 +AccountingGroup = "group_rutgers.#USER#"
