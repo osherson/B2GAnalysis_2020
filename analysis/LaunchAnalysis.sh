@@ -17,6 +17,11 @@ echo -e "${RED}> Building signal models... ${NC}"
 python ProcessSignals.py
 echo -e "${RED}> Building combine card... ${NC}"
 python MakeCards.py
+echo -e "${RED}> Running combine steps... ${NC}"
+python CombineStep1.py
+#python CombineGetBOF.py
+#python CombineStep2.py
+
 echo -e "${RED}> Cleaning up... ${NC}"
 python Cleanup.py
 end=`date +%s`
