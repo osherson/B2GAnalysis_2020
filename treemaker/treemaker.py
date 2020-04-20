@@ -44,6 +44,24 @@ class picoTree:
             # MC ONLY VARIABLES
             self.W = array('f', [0.0])
             self.AddBranch('weight_xsN', self.W)
+            self.WbbMM = array('f', [0.0])
+            self.AddBranch('weight_BBMM', self.WbbMM)
+            self.WbbMMu = array('f', [0.0])
+            self.AddBranch('weight_BBMM_up', self.WbbMMu)
+            self.WbbMMd = array('f', [0.0])
+            self.AddBranch('weight_BBMM_dn', self.WbbMMd)
+            self.WbbMT = array('f', [0.0])
+            self.AddBranch('weight_BBMT', self.WbbMT)
+            self.WbbMTu = array('f', [0.0])
+            self.AddBranch('weight_BBMT_up', self.WbbMTu)
+            self.WbbMTd = array('f', [0.0])
+            self.AddBranch('weight_BBMT_dn', self.WbbMTd)
+            self.WbbTT = array('f', [0.0])
+            self.AddBranch('weight_BBTT', self.WbbTT)
+            self.WbbTTu = array('f', [0.0])
+            self.AddBranch('weight_BBTT_up', self.WbbTTu)
+            self.WbbTTd = array('f', [0.0])
+            self.AddBranch('weight_BBTT_dn', self.WbbTTd)
             self.Wpu = array('f', [0.0])
             self.AddBranch('weight_PU', self.Wpu)
             self.Wpuu = array('f', [0.0])
@@ -129,8 +147,134 @@ class picoTree:
             if self.mc:
                 self.W[0] = float(self.weight)
                 self.Wpu[0] = self.T.puWeight
-                self.Wpuu[0] = self.T.puWeightUp
-                self.Wpud[0] = self.T.puWeightDown
+                if self.T.puWeight > 0:
+		            self.Wpuu[0] = self.T.puWeightUp/self.T.puWeight
+		            self.Wpud[0] = self.T.puWeightDown/self.T.puWeight
+		           m1, m2, t1, t2, m1u, m1d, m2u, m2d, t1u, t1d, t2u, t2d = 0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.
+                if self.year == "2016":
+               		if self.T.FatJet_pt[0] > 350 and self.T.FatJet_pt[0] < 850:
+               			m1 = 1.01
+               			m1d = (1.01-0.06)
+               			m1u = (1.01+0.10)
+               			t1 = 0.95
+               			t1d = (0.95-0.07)
+               			t1u = (0.95+0.13)
+               		else:
+               			m1 = 1.01
+               			m1d = (1.01-0.12)
+               			m1u = (1.01+0.20)
+               			t1 = 0.95
+               			t1d = (0.95-0.14)
+               			t1u = (0.95+0.26)
+               		if self.T.FatJet_pt[1] > 350 and self.T.FatJet_pt[1] < 850:
+               			m2 = 1.01
+               			m2d = (1.01-0.06)
+               			m2u = (1.01+0.10)
+               			t2 = 0.95
+               			t2d = (0.95-0.07)
+               			t2u = (0.95+0.13)
+               		else:
+               			m2 = 1.01
+               			m2d = (1.01-0.12)
+               			m2u = (1.01+0.20)
+               			t2 = 0.95
+               			t2d = (0.95-0.14)
+               			t2u = (0.95+0.26)
+            	if self.year == "2017":
+               		if self.T.FatJet_pt[0] > 250 and self.T.FatJet_pt[0] <= 350:
+               			m1 = 0.93
+               			m1d = (0.93-0.04)
+               			m1u = (0.93+0.03)
+               			t1 = 0.85
+               			t1d = (0.85-0.04)
+               			t1u = (0.85+0.04)
+               		if self.T.FatJet_pt[0] > 350 and self.T.FatJet_pt[0] < 840:
+               			m1 = 0.9
+               			m1d = (0.9-0.08)
+               			m1u = (0.9+0.04)
+               			t1 = 0.8
+               			t1d = (0.8-0.07)
+               			t1u = (0.8+0.04)
+               		else:
+               			m1 = 0.9
+               			m1d = (0.9-0.16)
+               			m1u = (0.9+0.08)
+               			t1 = 0.8
+               			t1d = (0.8-0.14)
+               			t1u = (0.8+0.08)
+               		if self.T.FatJet_pt[1] > 250 and self.T.FatJet_pt[1] <= 350:
+               			m2 = 0.93
+               			m2d = (0.93-0.04)
+               			m2u = (0.93+0.03)
+               			t2 = 0.85
+               			t2d = (0.85-0.04)
+               			t2u = (0.85+0.04)
+               		if self.T.FatJet_pt[1] > 350 and self.T.FatJet_pt[1] < 840:
+               			m2 = 0.9
+               			m2d = (0.9-0.08)
+               			m2u = (0.9+0.04)
+               			t2 = 0.8
+               			t2d = (0.8-0.07)
+               			t2u = (0.8+0.04)
+               		else:
+               			m2 = 0.9
+               			m2d = (0.9-0.16)
+               			m2u = (0.9+0.08)
+               			t2 = 0.8
+               			t2d = (0.8-0.14)
+               			t2u = (0.8+0.08)
+            	if self.year == "2018":
+               		if self.T.FatJet_pt[0] > 250 and self.T.FatJet_pt[0] <= 350:
+               			m1 = 0.93
+               			m1d = (0.93-0.05)
+               			m1u = (0.93+0.05)
+               			t1 = 0.89
+               			t1d = (0.89-0.08)
+               			t1u = (0.89+0.04)
+               		if self.T.FatJet_pt[0] > 350 and self.T.FatJet_pt[0] < 850:
+               			m1 = 0.89
+               			m1d = (0.89-0.06)
+               			m1u = (0.89+0.04)
+               			t1 = 0.84
+               			t1d = (0.84-0.05)
+               			t1u = (0.84+0.05)
+               		else:
+               			m1 = 0.89
+               			m1d = (0.89-0.12)
+               			m1u = (0.89+0.08)
+               			t1 = 0.84
+               			t1d = (0.84-0.1)
+               			t1u = (0.84+0.1)
+               		if self.T.FatJet_pt[1] > 250 and self.T.FatJet_pt[1] <= 350:
+               			m2 = 0.93
+               			m2d = (0.93-0.05)
+               			m2u = (0.93+0.05)
+               			t2 = 0.89
+               			t2d = (0.89-0.08)
+               			t2u = (0.89+0.04)
+               		if self.T.FatJet_pt[1] > 350 and self.T.FatJet_pt[1] < 850:
+               			m2 = 0.89
+               			m2d = (0.89-0.08)
+               			m2u = (0.89+0.04)
+               			t2 = 0.84
+               			t2d = (0.84-0.05)
+               			t2u = (0.84+0.05)
+               		else:
+               			m2 = 0.89
+               			m2d = (0.89-0.12)
+               			m2u = (0.89+0.08)
+               			t2 = 0.84
+               			t2d = (0.84-0.1)
+               			t2u = (0.84+0.1)
+	            self.WbbMM[0] = m1*m2
+	            self.WbbMMu[0] = m1u*m2u
+	            self.WbbMMd[0] = m1d*m2d
+	            self.WbbMT[0] = t1*m2
+	            self.WbbMTu[0] = t1u*m2u
+	            self.WbbMTd[0] = t1d*m2d
+	            self.WbbTT[0] = t1*t2
+	            self.WbbTTu[0] = t1u*t2u
+	            self.WbbTTd[0] = t1d*t1d
                 ttbarHT = 0.0
                 for gp in range(self.T.nGenPart):
                     if math.fabs(self.T.GenPart_pdgId[gp]) == 6 and self.T.GenPart_status[gp] == 62:
