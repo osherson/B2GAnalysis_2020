@@ -150,7 +150,7 @@ class picoTree:
                 if self.T.puWeight > 0:
 		            self.Wpuu[0] = self.T.puWeightUp/self.T.puWeight
 		            self.Wpud[0] = self.T.puWeightDown/self.T.puWeight
-		           m1, m2, t1, t2, m1u, m1d, m2u, m2d, t1u, t1d, t2u, t2d = 0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.
+                m1, m2, t1, t2, m1u, m1d, m2u, m2d, t1u, t1d, t2u, t2d = 0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.
                 if self.year == "2016":
                		if self.T.FatJet_pt[0] > 350 and self.T.FatJet_pt[0] < 850:
                			m1 = 1.01
@@ -266,15 +266,15 @@ class picoTree:
                			t2 = 0.84
                			t2d = (0.84-0.1)
                			t2u = (0.84+0.1)
-	            self.WbbMM[0] = m1*m2
-	            self.WbbMMu[0] = m1u*m2u
-	            self.WbbMMd[0] = m1d*m2d
-	            self.WbbMT[0] = t1*m2
-	            self.WbbMTu[0] = t1u*m2u
-	            self.WbbMTd[0] = t1d*m2d
-	            self.WbbTT[0] = t1*t2
-	            self.WbbTTu[0] = t1u*t2u
-	            self.WbbTTd[0] = t1d*t1d
+                self.WbbMM[0] = m1*m2
+                self.WbbMMu[0] = m1u*m2u
+                self.WbbMMd[0] = m1d*m2d
+                self.WbbMT[0] = t1*m2
+                self.WbbMTu[0] = t1u*m2u
+                self.WbbMTd[0] = t1d*m2d
+                self.WbbTT[0] = t1*t2
+                self.WbbTTu[0] = t1u*t2u
+                self.WbbTTd[0] = t1d*t1d
                 ttbarHT = 0.0
                 for gp in range(self.T.nGenPart):
                     if math.fabs(self.T.GenPart_pdgId[gp]) == 6 and self.T.GenPart_status[gp] == 62:
@@ -289,16 +289,20 @@ class picoTree:
                 Kin_jesCorrDown = self.GetJESComp("C", "down")
                 Kin_jesUnCorrUp = self.GetJESComp("U", "up")
                 Kin_jesUnCorrDown = self.GetJESComp("U", "down")
+                #print "==========================="
+                #print str(self.T.FatJet_pt_nom[0]) + "<-- nominal"
+                #print str(self.T.FatJet_pt_jerUp[0]) + "<-- jer up"
+                #print str(self.T.FatJet_pt_jerDown[0]) + "<-- jer down"
                 self.FillJetVars(Kin_jesCorrUp[0], Kin_jesCorrUp[1], Kin_jesCorrUp[2], self.T_jesCorr_up)
                 self.FillJetVars(Kin_jesCorrDown[0], Kin_jesCorrDown[1], Kin_jesCorrDown[2], self.T_jesCorr_down)
                 self.FillJetVars(Kin_jesUnCorrUp[0], Kin_jesUnCorrUp[1], Kin_jesUnCorrUp[2], self.T_jesUnCorr_up)
                 self.FillJetVars(Kin_jesUnCorrDown[0], Kin_jesUnCorrDown[1], Kin_jesUnCorrDown[2], self.T_jesUnCorr_down)
-                self.FillJetVars(self.T.FatJet_pt, self.T.FatJet_mass_jmsUp, self.T.FatJet_msoftdrop_jmsUp, self.T_jms_up)
-                self.FillJetVars(self.T.FatJet_pt, self.T.FatJet_mass_jmsDown, self.T.FatJet_msoftdrop_jmsDown, self.T_jms_down)
+                self.FillJetVars(self.T.FatJet_pt_nom, self.T.FatJet_mass_jmsUp, self.T.FatJet_msoftdrop_jmsUp, self.T_jms_up)
+                self.FillJetVars(self.T.FatJet_pt_nom, self.T.FatJet_mass_jmsDown, self.T.FatJet_msoftdrop_jmsDown, self.T_jms_down)
                 self.FillJetVars(self.T.FatJet_pt_jerUp, self.T.FatJet_mass_jerUp, self.T.FatJet_msoftdrop_jerUp, self.T_jer_up)
                 self.FillJetVars(self.T.FatJet_pt_jerDown, self.T.FatJet_mass_jerDown, self.T.FatJet_msoftdrop_jerDown, self.T_jer_down)
-                self.FillJetVars(self.T.FatJet_pt, self.T.FatJet_mass_jmrUp, self.T.FatJet_msoftdrop_jmrUp, self.T_jmr_up)
-                self.FillJetVars(self.T.FatJet_pt, self.T.FatJet_mass_jmrDown, self.T.FatJet_msoftdrop_jmrDown, self.T_jmr_down)
+                self.FillJetVars(self.T.FatJet_pt_nom, self.T.FatJet_mass_jmrUp, self.T.FatJet_msoftdrop_jmrUp, self.T_jmr_up)
+                self.FillJetVars(self.T.FatJet_pt_nom, self.T.FatJet_mass_jmrDown, self.T.FatJet_msoftdrop_jmrDown, self.T_jmr_down)
 
     def GetJESComp(self, corr, which):
         PT = []
