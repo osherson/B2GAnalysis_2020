@@ -76,6 +76,8 @@ def preprocess(Inputs, OutputFolder, Year, Run, Triggers):
     if Run == "MC":
         jmeCorrectionsAK8 = createJMECorrector(True, Year, Run, "All", True, "AK8PFPuppi")
         useModules.append(jmeCorrectionsAK8())
+        jmeCorrectionsAK4 = createJMECorrector(True, Year, Run, "All", True, "AK4PF")
+        useModules.append(jmeCorrectionsAK4())
         if Year == "2016":
             useModules.append(puWeight_2016())
         if Year == "2017":
@@ -85,6 +87,8 @@ def preprocess(Inputs, OutputFolder, Year, Run, Triggers):
     else:
         jmeCorrectionsAK8 = createJMECorrector(False, Year, Run, "Total", True, "AK8PFPuppi")
         useModules.append(jmeCorrectionsAK8())
+        jmeCorrectionsAK4 = createJMECorrector(False, Year, Run, "Total", True, "AK4PF")
+        useModules.append(jmeCorrectionsAK4())
         JSON = GetJSON(Year)
 
     preproc_cuts = "nFatJet>1&&PV_npvsGood>0&&("

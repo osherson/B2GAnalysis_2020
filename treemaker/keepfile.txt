@@ -1,7 +1,6 @@
 drop *
 keep FatJet*
-keep Jet_pt
-keep Jet_eta
+keep Jet*
 keep nGenPart
 keep GenPart_pdgId
 keep GenPart_status
