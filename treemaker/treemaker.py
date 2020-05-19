@@ -278,8 +278,8 @@ class picoTree:
                 self.evt_ttRW[0] = ttbarHT
                 self.WT[0] = self.TrigHist.GetBinContent(self.TrigHist.FindBin(self.HT))
                 if self.WT[0] > 0:
-		            self.WTup[0] = min(1.0, self.TrigHist.GetBinContent(self.TrigHist.FindBin(self.HT)) + self.TrigHist.GetBinError(self.TrigHist.FindBin(self.HT)))
-		            self.WTdn[0] = max(0.0, self.TrigHist.GetBinContent(self.TrigHist.FindBin(self.HT)) - self.TrigHist.GetBinError(self.TrigHist.FindBin(self.HT)))
+		            self.WTup[0] = min(1.0, self.TrigHist.GetBinContent(self.TrigHist.FindBin(self.HT)) + self.TrigHist.GetBinError(self.TrigHist.FindBin(self.HT)))/self.WT[0]
+		            self.WTdn[0] = max(0.0, self.TrigHist.GetBinContent(self.TrigHist.FindBin(self.HT)) - self.TrigHist.GetBinError(self.TrigHist.FindBin(self.HT)))/self.WT[0]
                 self.PDFup[0] = 1 + numpy.std(self.T.LHEPdfWeight)
                 self.PDFdn[0] = 1 - numpy.std(self.T.LHEPdfWeight)
                 Kin_jesCorrUp = self.GetJESComp("C", "Up")
