@@ -184,7 +184,7 @@ class picoTree:
                			t1 = 0.85
                			t1d = (0.85-0.04)
                			t1u = (0.85+0.04)
-               		if self.T.FatJet_pt[0] > 350 and self.T.FatJet_pt[0] < 840:
+               		elif self.T.FatJet_pt[0] > 350 and self.T.FatJet_pt[0] < 840:
                			m1 = 0.9
                			m1d = (0.9-0.08)
                			m1u = (0.9+0.04)
@@ -205,7 +205,7 @@ class picoTree:
                			t2 = 0.85
                			t2d = (0.85-0.04)
                			t2u = (0.85+0.04)
-               		if self.T.FatJet_pt[1] > 350 and self.T.FatJet_pt[1] < 840:
+               		elif self.T.FatJet_pt[1] > 350 and self.T.FatJet_pt[1] < 840:
                			m2 = 0.9
                			m2d = (0.9-0.08)
                			m2u = (0.9+0.04)
@@ -227,7 +227,7 @@ class picoTree:
                			t1 = 0.89
                			t1d = (0.89-0.08)
                			t1u = (0.89+0.04)
-               		if self.T.FatJet_pt[0] > 350 and self.T.FatJet_pt[0] < 850:
+               		elif self.T.FatJet_pt[0] > 350 and self.T.FatJet_pt[0] < 850:
                			m1 = 0.89
                			m1d = (0.89-0.06)
                			m1u = (0.89+0.04)
@@ -248,7 +248,7 @@ class picoTree:
                			t2 = 0.89
                			t2d = (0.89-0.08)
                			t2u = (0.89+0.04)
-               		if self.T.FatJet_pt[1] > 350 and self.T.FatJet_pt[1] < 850:
+               		elif self.T.FatJet_pt[1] > 350 and self.T.FatJet_pt[1] < 850:
                			m2 = 0.89
                			m2d = (0.89-0.08)
                			m2u = (0.89+0.04)
