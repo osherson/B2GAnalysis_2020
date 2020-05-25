@@ -139,14 +139,13 @@ class picoTree:
                     self.HT += self.T.Jet_pt[j]
             self.J1 = TLorentzVector()
             self.J2 = TLorentzVector()
-            self.FillJetVars(self.T.FatJet_pt_nom, self.T.FatJet_mass_nom, self.T.FatJet_msoftdrop_nom, self.T_nominal, self.T.Jet_pt_nom)
             if self.mc:
                 self.W[0] = float(self.weight)
                 self.Wpu[0] = self.T.puWeight
                 if self.T.puWeight > 0:
 		            self.Wpuu[0] = self.T.puWeightUp/self.T.puWeight
 		            self.Wpud[0] = self.T.puWeightDown/self.T.puWeight
-                m1, m2, t1, t2, m1u, m1d, m2u, m2d, t1u, t1d, t2u, t2d = 0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.,0.
+                m1, m2, t1, t2, m1u, m1d, m2u, m2d, t1u, t1d, t2u, t2d = 1.,1.,1.,1.,1.,1.,1.,1.,1.,1.,1.,1.
                 if self.year == "2016":
                		if self.T.FatJet_pt[0] > 350 and self.T.FatJet_pt[0] < 850:
                			m1 = 1.01
@@ -293,6 +292,8 @@ class picoTree:
                 self.FillJetVars(Kin_jesUnCorrDown[0], Kin_jesUnCorrDown[1], Kin_jesUnCorrDown[2], self.T_jesUnCorr_down, Kin_jesUnCorrUp[3])
                 self.FillJetVars(self.T.FatJet_pt_jerUp, self.T.FatJet_mass_jerUp, self.T.FatJet_msoftdrop_jerUp, self.T_jer_up, self.T.Jet_pt_jerUp)
                 self.FillJetVars(self.T.FatJet_pt_jerDown, self.T.FatJet_mass_jerDown, self.T.FatJet_msoftdrop_jerDown, self.T_jer_down, self.T.Jet_pt_jerDown)
+
+            self.FillJetVars(self.T.FatJet_pt_nom, self.T.FatJet_mass_nom, self.T.FatJet_msoftdrop_nom, self.T_nominal, self.T.Jet_pt_nom)
 
     def GET(self, B, i):
 		return getattr(self.e, B)[i]
